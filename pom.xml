@@ -18,7 +18,7 @@
         <javaMelody.version>1.69.0</javaMelody.version>
         <swagger.version>2.7.0</swagger.version>
         <postgresql.version>42.2.2</postgresql.version>
-        <fastjson.version>1.2.24</fastjson.version>
+        <fastjson.version>1.2.25</fastjson.version>
         <commons-lang3.version>3.0</commons-lang3.version>
         <jackson.version>2.9.3</jackson.version>
     </properties>
