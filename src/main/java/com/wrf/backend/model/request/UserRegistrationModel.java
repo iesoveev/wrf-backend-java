@@ -3,6 +3,9 @@ package com.wrf.backend.model.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UserRegistrationModel {
 
     @ApiModelProperty(required = true, value = "Телефон")

@@ -13,12 +13,6 @@ public final class Response implements Serializable {
     private final String message;
     private final Object data;
 
-    public Response(Integer code, String message, Object data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
-
     public Response(Integer code, String message) {
         this.code = code;
         this.message = message;
@@ -33,7 +27,6 @@ public final class Response implements Serializable {
 
     public byte[] toJson() {
         Map<String, Object> outMap = new HashMap<>();
-        outMap.put("code", this.code);
         outMap.put("success", this.code == null);
         outMap.put("message", this.message);
         outMap.put("data", this.data);

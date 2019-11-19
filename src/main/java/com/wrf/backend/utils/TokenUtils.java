@@ -1,7 +1,6 @@
 package com.wrf.backend.utils;
 
-import com.wrf.backend.exception.ErrorCode;
-import com.wrf.backend.exception.RestException;
+import com.wrf.backend.exception.UnauthorizedException;
 import com.wrf.backend.model.response.UserToken;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -16,7 +15,7 @@ public class TokenUtils {
 
     public static void validate(UserToken userToken) {
         if (userToken == null || userToken.getExpirationTime().before(new Date())) {
-            throw new RestException(ErrorCode.ACCESS_DENIED.getCode(), "Необходима авторизация");
+            throw new UnauthorizedException("Необходима авторизация");
         }
     }
 

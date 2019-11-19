@@ -1,8 +1,9 @@
 package com.wrf.backend.config;
 
 import com.wrf.backend.HeaderConst;
+import com.wrf.backend.exception.UnauthorizedException;
+import com.wrf.backend.exception.ErrorCode;
 import com.wrf.backend.model.response.Response;
-import com.wrf.backend.exception.RestException;
 import com.wrf.backend.service.AuthService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,9 +44,9 @@ public final class TokenAuthenticationFilter implements Filter {
         String token = getTokenFromHeader(request);
         try {
             authService.checkAccessToken(token);
-        } catch (RestException e) {
+        } catch (UnauthorizedException e) {
             LOG.error(e);
-            response.getWriter().print(new Response(e.getCode(), e.getMessage()));
+            response.getWriter().print(new Response(ErrorCode.UNAUTHORIZED.getCode(), e.getMessage()));
             return;
         }
         chain.doFilter(wrappedRequest, response);

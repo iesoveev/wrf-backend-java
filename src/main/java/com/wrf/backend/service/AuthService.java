@@ -2,8 +2,8 @@ package com.wrf.backend.service;
 
 import com.wrf.backend.DbApi;
 import com.wrf.backend.entity.User;
-import com.wrf.backend.exception.ErrorCode;
-import com.wrf.backend.exception.RestException;
+import com.wrf.backend.exception.UnauthorizedException;
+import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.request.UserRegistrationModel;
 import com.wrf.backend.model.response.TokenModel;
 import com.wrf.backend.model.response.UserToken;
@@ -34,7 +34,7 @@ public class AuthService {
 
     public void checkAccessToken(String token) {
         if (token == null || token.isEmpty()) {
-            throw new RestException(ErrorCode.ACCESS_DENIED.getCode(), "Authorization header is empty");
+            throw new UnauthorizedException("Authorization header is empty");
         }
         UserToken userToken = accessTokenMap.get(token);
         TokenUtils.validate(userToken);
@@ -45,7 +45,7 @@ public class AuthService {
     public TokenModel login(UserRegistrationModel model) throws NoSuchAlgorithmException {
         User user = dbApi.getUserByPhoneAndPass(model.getPhone(), model.getPassword());
         if (user == null) {
-            throw new RestException(ErrorCode.ACCESS_DENIED.getCode(), "Неверный логин или пароль");
+            throw new UnauthorizedException("Неверный логин или пароль");
         }
         return createAccessAndRefreshTokens(model.getPhone());
     }
@@ -54,7 +54,7 @@ public class AuthService {
         User user = dbApi.getUserByPhone(model.getPhone());
 
         if (user != null) {
-            throw new RestException(ErrorCode.RECORD_EXIST.getCode(), "Пользователь c номером телефона " + model.getPhone() + " уже существует");
+            throw new BusinessException("Пользователь c номером телефона " + model.getPhone() + " уже существует");
         }
         String passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
         hibernateTemplate.save(new User(model.getPhone(), passwordHash));

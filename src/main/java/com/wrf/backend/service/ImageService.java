@@ -1,7 +1,6 @@
 package com.wrf.backend.service;
 
-import com.wrf.backend.exception.ErrorCode;
-import com.wrf.backend.exception.RestException;
+import com.wrf.backend.exception.BusinessException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -26,7 +25,7 @@ public class ImageService {
             Files.write(path, imageValue, StandardOpenOption.CREATE);
         } catch(IOException e) {
             LOG.error("Can`t write image", e);
-            throw new RestException(ErrorCode.UPLOAD_FILE_EXCEPTION.getCode(), "Не удалось сохранить файл ");
+            throw new BusinessException("Не удалось сохранить файл ");
         }
     }
 }

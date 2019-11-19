@@ -1,8 +1,7 @@
 package com.wrf.backend.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wrf.backend.exception.ErrorCode;
-import com.wrf.backend.exception.RestException;
+import com.wrf.backend.exception.BusinessException;
 import io.swagger.annotations.ApiModelProperty;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class ValidationUtils {
                 errors.add("Некорректный формат телефона");
 
             if (!errors.isEmpty())
-                throw new RestException(ErrorCode.PARAM_EXCEPTION.getCode(), String.join(", ", errors));
+                throw new BusinessException(String.join(", ", errors));
         }
     }
 }

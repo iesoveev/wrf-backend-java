@@ -2,6 +2,8 @@ package com.wrf.backend.strategy;
 
 import com.wrf.backend.model.response.Response;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class ExceptionHandler {
 
     private ExceptionStrategy exceptionStrategy;
@@ -10,7 +12,7 @@ public class ExceptionHandler {
         this.exceptionStrategy = exceptionStrategy;
     }
 
-    public Response process(Exception e) {
-        return this.exceptionStrategy.process(e);
+    public Response process(Exception e, HttpServletResponse response) {
+        return this.exceptionStrategy.process(e, response);
     }
 }
