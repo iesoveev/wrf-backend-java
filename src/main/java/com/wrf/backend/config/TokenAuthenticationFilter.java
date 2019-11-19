@@ -8,6 +8,7 @@ import com.wrf.backend.service.AuthService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,7 @@ public final class TokenAuthenticationFilter implements Filter {
             authService.checkAccessToken(token);
         } catch (UnauthorizedException e) {
             LOG.error(e);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().print(new Response(ErrorCode.UNAUTHORIZED.getCode(), e.getMessage()));
             return;
         }
