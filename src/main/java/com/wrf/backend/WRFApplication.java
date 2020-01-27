@@ -9,6 +9,6 @@ public class WRFApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WRFApplication.class, args);
-    }
 
+    }
 }

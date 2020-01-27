@@ -1,10 +1,10 @@
 package com.wrf.backend.model.response;
 
-public final class InnovationResponse {
+public final class InnovationDTO {
 
     private final String innovationId;
 
-    public InnovationResponse(String id) {
+    public InnovationDTO(String id) {
         this.innovationId = id;
     }
 

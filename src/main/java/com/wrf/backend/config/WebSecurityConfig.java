@@ -12,20 +12,24 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    final AuthService authService;
+
     @Autowired
-    AuthService authService;
+    public WebSecurityConfig(AuthService authService) {
+        this.authService = authService;
+    }
 
     @Value("${monitoring.login}")
-    String login;
+    private String monitoringLogin;
 
     @Value("${monitoring.password}")
-    String password;
+    private String monitoringPassword;
 
     @Autowired
     void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication()
-                .withUser(login).password(password).roles("monitoring");
+                .withUser(monitoringLogin).password(monitoringPassword).roles("monitoring");
     }
 
     @Override

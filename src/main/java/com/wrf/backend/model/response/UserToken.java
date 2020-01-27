@@ -1,6 +1,7 @@
 package com.wrf.backend.model.response;
 
 import java.util.Date;
+import java.util.Objects;
 
 public final class UserToken {
 
@@ -18,5 +19,20 @@ public final class UserToken {
 
     public String getPhone() {
         return phone;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserToken userToken = (UserToken) o;
+        return Objects.equals(phone, userToken.phone) &&
+                Objects.equals(expirationTime, userToken.expirationTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phone, expirationTime);
     }
 }

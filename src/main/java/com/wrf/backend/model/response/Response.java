@@ -1,7 +1,7 @@
 package com.wrf.backend.model.response;
 
 import com.alibaba.fastjson.JSON;
-
+import com.wrf.backend.exception.ErrorMessage;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -9,33 +9,39 @@ import java.util.Map;
 
 public final class Response implements Serializable {
 
-    private final Integer code;
     private final String message;
-    private final Object data;
+    private final boolean success;
 
-    public Response(Integer code, String message) {
-        this.code = code;
+    public Response(ErrorMessage error) {
+        this.message = error.getMessage();
+        this.success = false;
+    }
+
+    public Response(String message) {
         this.message = message;
-        this.data = null;
+        this.success = false;
     }
 
     public Response() {
-        this.code = null;
         this.message = null;
-        this.data = null;
+        this.success = true;
     }
 
-    public byte[] toJson() {
-        Map<String, Object> outMap = new HashMap<>();
-        outMap.put("success", this.code == null);
-        outMap.put("message", this.message);
-        outMap.put("data", this.data);
-        return JSON.toJSONString(outMap).getBytes(StandardCharsets.UTF_8);
+    public String getMessage() {
+        return message;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    @Override
     public String toString() {
-        return new String(toJson(), StandardCharsets.UTF_8);
+        Map<String, Object> outMap = new HashMap<>();
+        outMap.put("success", this.message == null);
+        outMap.put("message", this.message);
+        byte[] json =  JSON.toJSONString(outMap).getBytes(StandardCharsets.UTF_8);
+        return new String(json, StandardCharsets.UTF_8);
     }
-
 }
 

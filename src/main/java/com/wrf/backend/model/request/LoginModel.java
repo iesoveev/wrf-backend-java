@@ -3,18 +3,7 @@ package com.wrf.backend.model.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class UserRegistrationModel {
-
-    @ApiModelProperty(required = true, value = "Имя")
-    @JsonProperty(value = "name")
-    private String name;
-
-    @ApiModelProperty(required = true, value = "Фамилия")
-    @JsonProperty(value = "surname")
-    private String surname;
+public class LoginModel {
 
     @ApiModelProperty(required = true, value = "Телефон")
     @JsonProperty(value = "phone")
@@ -31,12 +20,11 @@ public class UserRegistrationModel {
     public String getPassword() {
         return password;
     }
-
-    public String getName() {
-        return name;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getSurname() {
-        return surname;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

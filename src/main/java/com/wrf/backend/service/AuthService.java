@@ -2,21 +2,27 @@ package com.wrf.backend.service;
 
 import com.wrf.backend.DbApi;
 import com.wrf.backend.entity.User;
-import com.wrf.backend.exception.UnauthorizedException;
 import com.wrf.backend.exception.BusinessException;
+import com.wrf.backend.model.request.LoginModel;
 import com.wrf.backend.model.request.UserRegistrationModel;
-import com.wrf.backend.model.response.TokenModel;
+import com.wrf.backend.model.response.TokenDTO;
+import com.wrf.backend.model.response.UserInfo;
 import com.wrf.backend.model.response.UserToken;
 import com.wrf.backend.utils.PasswordUtils;
 import com.wrf.backend.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.RequestScope;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.wrf.backend.exception.ErrorMessage.*;
 
 @RequestScope
 @Service
@@ -24,54 +30,55 @@ public class AuthService {
 
     private static final Map<String, UserToken> accessTokenMap = new ConcurrentHashMap<>();
 
-    private User userInfo;
+    private UserInfo userInfo;
+
+    private final DbApi dbApi;
+
+    private final HibernateTemplate hibernateTemplate;
 
     @Autowired
-    DbApi dbApi;
-
-    @Autowired
-    HibernateTemplate hibernateTemplate;
+    public AuthService(DbApi dbApi, HibernateTemplate hibernateTemplate) {
+        this.dbApi = dbApi;
+        this.hibernateTemplate = hibernateTemplate;
+    }
 
     public void checkAccessToken(String token) {
-        if (token == null || token.isEmpty()) {
-            throw new UnauthorizedException("Authorization header is empty");
-        }
-        UserToken userToken = accessTokenMap.get(token);
+        var userToken = accessTokenMap.get(token);
         TokenUtils.validate(userToken);
-
-        userInfo = dbApi.getUserByPhone(userToken.getPhone());
+        var user = dbApi.getUserByPhone(userToken.getPhone());
+        userInfo = new UserInfo(user.getPhone(), user.getId());
     }
 
-    public TokenModel login(UserRegistrationModel model) throws NoSuchAlgorithmException {
-        User user = dbApi.getUserByPhoneAndPass(model.getPhone(), model.getPassword());
-        if (user == null) {
-            throw new UnauthorizedException("Неверный логин или пароль");
-        }
+    @Transactional
+    public TokenDTO login(final LoginModel model) throws NoSuchAlgorithmException {
+        var user = Optional.ofNullable(dbApi.getUser(model.getPhone(), model.getPassword()))
+                .orElseThrow(() -> new BusinessException(INVALID_LOGIN_DATA));
+
+        user.setLastLoginTime(new Date());
+        hibernateTemplate.update(user);
         return createAccessAndRefreshTokens(model.getPhone());
     }
 
-    public TokenModel addUser(UserRegistrationModel model) throws NoSuchAlgorithmException {
-        User user = dbApi.getUserByPhone(model.getPhone());
-
-        if (user != null) {
-            throw new BusinessException("Пользователь c номером телефона " + model.getPhone() + " уже существует");
-        }
-        String passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
-        hibernateTemplate.save(new User(model.getPhone(), passwordHash));
+    @Transactional
+    public TokenDTO addUser(final UserRegistrationModel model) throws NoSuchAlgorithmException {
+        dbApi.checkUserExist(model.getPhone());
+        var passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
+        hibernateTemplate.save(new User(model.getName(), model.getSurname(),
+                model.getPhone(), passwordHash));
         return createAccessAndRefreshTokens(model.getPhone());
     }
 
-    private TokenModel createAccessAndRefreshTokens(String phone) {
-        String accessToken = UUID.randomUUID().toString();
-        accessTokenMap.entrySet().stream().filter(el ->
-                el.getValue().getPhone().equals(phone)).forEach(el ->
-                accessTokenMap.remove(el.getKey())
-        );
+    private TokenDTO createAccessAndRefreshTokens(final String phone) {
+        var accessToken = UUID.randomUUID().toString();
+        accessTokenMap.entrySet().stream()
+                .filter(el -> el.getValue().getPhone().equals(phone))
+                .forEach(el -> accessTokenMap.remove(el.getKey()));
+
         accessTokenMap.put(accessToken, new UserToken(phone, TokenUtils.getTokenExpirationTime()));
-        return new TokenModel(accessToken);
+        return new TokenDTO(accessToken);
     }
 
-    User getUserInfo() {
+    public UserInfo getUserInfo() {
         return userInfo;
     }
 }

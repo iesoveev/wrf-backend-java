@@ -1,32 +1,35 @@
 package com.wrf.backend.controller;
 
+import com.wrf.backend.model.request.LoginModel;
 import com.wrf.backend.model.request.UserRegistrationModel;
-import com.wrf.backend.model.response.TokenModel;
+import com.wrf.backend.model.response.TokenDTO;
 import com.wrf.backend.service.AuthService;
 import com.wrf.backend.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 
 @RestController
+@CrossOrigin
 public class AuthController {
 
+    private final AuthService authService;
+
     @Autowired
-    AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Transactional
-    public TokenModel addUser(@RequestBody UserRegistrationModel model) throws IllegalAccessException, NoSuchAlgorithmException {
+    public TokenDTO addUser(@RequestBody UserRegistrationModel model) throws IllegalAccessException, NoSuchAlgorithmException {
         ValidationUtils.validate(model);
         return authService.addUser(model);
     }
 
     @PostMapping("/auth/login")
-    @Transactional
-    public TokenModel login(@RequestBody UserRegistrationModel model) throws IllegalAccessException, NoSuchAlgorithmException {
+    public TokenDTO login(@RequestBody LoginModel model) throws IllegalAccessException, NoSuchAlgorithmException {
         ValidationUtils.validate(model);
         return authService.login(model);
     }

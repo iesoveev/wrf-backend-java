@@ -7,17 +7,44 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     @Value("${spring.datasource.driver-class-name}")
-    String driverClassName;
+    private String driverClassName;
 
     @Value("${spring.datasource.url}")
-    String url;
+    private String url;
 
     @Value("${spring.datasource.username}")
-    String username;
+    private String username;
 
     @Value("${spring.datasource.password}")
-    String password;
+    private String password;
 
     @Value("${spring.jpa.properties.hibernate.dialect}")
-    String dialect;
+    private String dialect;
+
+    @Value("${image.path}")
+    private String imagePath;
+
+    public String getDriverClassName() {
+        return driverClassName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getDialect() {
+        return dialect;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
 }

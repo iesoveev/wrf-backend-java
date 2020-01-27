@@ -12,7 +12,7 @@ public class ExceptionHandler {
         this.exceptionStrategy = exceptionStrategy;
     }
 
-    public Response process(Exception e, HttpServletResponse response) {
+    public Response process(final Exception e, final HttpServletResponse response) {
         return this.exceptionStrategy.process(e, response);
     }
 }

@@ -20,10 +20,6 @@ public class Innovation extends BaseEntity {
     @Description("Идентификатор изображения")
     private String imageUuid;
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "userId", referencedColumnName = "id", insertable = false, updatable = false)
-//    private User user;
-
     @Column
     @Description("Идентификатор пользователя")
     private String userId;

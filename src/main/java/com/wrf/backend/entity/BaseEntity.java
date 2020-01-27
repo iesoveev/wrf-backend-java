@@ -6,15 +6,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.Date;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
+
+    BaseEntity() {
+        this.createdTime = new Date();
+    }
 
     @Id
     @Column(length = 36)
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+
+    @Column
+    private Date createdTime;
 
     @Override
     public String toString() {
@@ -23,5 +31,9 @@ public abstract class BaseEntity implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
     }
 }
