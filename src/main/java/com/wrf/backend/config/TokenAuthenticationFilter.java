@@ -22,7 +22,7 @@ import static com.wrf.backend.exception.ErrorMessage.*;
 public final class TokenAuthenticationFilter implements Filter {
 
     private static final List<String> FREE_SERVLET_PATHS = Arrays.asList("/users", "/auth/login",
-            "/", "/ping", "/monitoring", "/webjars/springfox-swagger", "/swagger", "/v2/api-docs");
+            "/ping", "/monitoring", "/webjars/springfox-swagger", "/swagger", "/v2/api-docs");
 
     private static final Logger LOG = LogManager.getLogger(TokenAuthenticationFilter.class);
 
@@ -42,7 +42,7 @@ public final class TokenAuthenticationFilter implements Filter {
                 .filter(freePath -> StringUtils.startsWith(path, freePath))
                 .count();
         // Если на url можно попасть без регистрации, то пускаем сразу
-        if (count > 0) {
+        if (count > 0 || path.equals("/")) {
             chain.doFilter(request, response);
             return;
         }

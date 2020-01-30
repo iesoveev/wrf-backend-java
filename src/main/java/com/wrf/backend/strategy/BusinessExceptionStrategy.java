@@ -9,7 +9,7 @@ public class BusinessExceptionStrategy implements ExceptionStrategy {
 
     @Override
     public Response process(final Exception e, final HttpServletResponse response) {
-        LOG.error(e);
+        LOG.warn(e);
         response.setStatus(HttpStatus.OK.value());
         return new Response(e.getMessage());
     }

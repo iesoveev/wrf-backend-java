@@ -2,9 +2,11 @@ package com.wrf.backend;
 
 import com.wrf.backend.entity.*;
 import com.wrf.backend.exception.BusinessException;
+import com.wrf.backend.model.request.GeneralPeriodModel;
 import com.wrf.backend.model.response.BaseDTO;
 import com.wrf.backend.model.response.CategoryDTO;
 import com.wrf.backend.model.response.EventDTO;
+import com.wrf.backend.utils.DateUtils;
 import com.wrf.backend.utils.PasswordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-
 import static com.wrf.backend.exception.ErrorMessage.*;
 
 @Repository
@@ -144,5 +145,13 @@ public class DbApi {
                 .add(Projections.property("createdTime"), "createdDateTime")
                 .add(Projections.property("user.fullName"), "username")
                 .add(Projections.property("text"), "text");
+    }
+
+    public List<AndroidLog> getAndroidLog(GeneralPeriodModel model) {
+        var criteria = DetachedCriteria.forClass(AndroidLog.class);
+        var beginDate = DateUtils.parse(model.getBeginDate());
+        var endDate = DateUtils.parse(model.getEndDate());
+        criteria.add(Restrictions.between("createdTime", beginDate, endDate));
+        return (List<AndroidLog>) find(criteria);
     }
 }

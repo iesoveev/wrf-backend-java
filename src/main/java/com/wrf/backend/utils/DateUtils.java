@@ -11,10 +11,9 @@ public class DateUtils {
     private static final String dateTimePattern = "dd.MM.yyyy HH:mm:ss";
     public static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(dateTimePattern);
 
-    public static Date format(Date date) {
-        String dateString = dateTimeFormatter.format(date);
+    public static Date parse(String date) {
         try {
-            return dateTimeFormatter.parse(dateString);
+            return dateTimeFormatter.parse(date);
         } catch (ParseException e) {
             throw new BusinessException(e.getMessage());
         }
