@@ -6,21 +6,20 @@ import com.wrf.backend.model.response.AndroidLogDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.LogService;
 import com.wrf.backend.utils.ValidationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LogController {
 
     final LogService logService;
 
-    @Autowired
-    public LogController(LogService logService) {
-        this.logService = logService;
-    }
+    final HibernateTemplate hibernateTemplate;
 
     @PutMapping("/push")
     public Response pushLog(@RequestBody AndroidLogModel model) throws IllegalAccessException {
@@ -29,9 +28,9 @@ public class LogController {
         return new Response();
     }
 
-    @GetMapping("/get")
-    public List<AndroidLogDTO> getLog(@RequestBody GeneralPeriodModel model) throws IllegalAccessException {
+    @GetMapping("/find")
+    public List<AndroidLogDTO> findLog(@RequestBody GeneralPeriodModel model) throws IllegalAccessException {
         ValidationUtils.validate(model);
-        return logService.getLog(model);
+        return logService.findLog(model);
     }
 }

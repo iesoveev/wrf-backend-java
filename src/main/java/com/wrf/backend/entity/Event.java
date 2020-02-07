@@ -1,11 +1,17 @@
 package com.wrf.backend.entity;
 
 import com.wrf.backend.Description;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table
 @Description("События в рамках смены")
+@Getter
+@Setter
 public class Event extends BaseEntity {
 
     @Column
@@ -25,45 +31,5 @@ public class Event extends BaseEntity {
 
     @Column
     private String userId;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public WorkShift getWorkShift() {
-        return workShift;
-    }
-
-    public void setWorkShift(WorkShift workShift) {
-        this.workShift = workShift;
-    }
-
-    public String getWorkShiftId() {
-        return workShiftId;
-    }
-
-    public void setWorkShiftId(String workShiftId) {
-        this.workShiftId = workShiftId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 }
 

@@ -1,6 +1,7 @@
 package com.wrf.backend.entity;
 
 import com.wrf.backend.Description;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
+@Getter
 public class Const extends BaseEntity {
 
     @Column
@@ -21,16 +23,4 @@ public class Const extends BaseEntity {
     @Column
     @Description("Значение")
     private String value;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getValue() {
-        return value;
-    }
 }

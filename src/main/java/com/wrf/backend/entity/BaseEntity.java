@@ -1,5 +1,6 @@
 package com.wrf.backend.entity;
 
+import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
+@Getter
 public abstract class BaseEntity implements Serializable {
 
     BaseEntity() {
@@ -27,13 +29,5 @@ public abstract class BaseEntity implements Serializable {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + ":" + id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
     }
 }

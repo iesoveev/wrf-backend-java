@@ -9,7 +9,6 @@ public enum ErrorMessage {
     INTERNAL("Внутренняя ошибка сервера"),
     INVALID_LOGIN_DATA("Неверный логин или пароль"),
     NO_AUTHORIZATION("Доступ запрещен"),
-    OK("ОК"),
     USER_IS_ALREADY_REGISTERED("Пользователь c телефоном {0} уже зарегестрирован"),
     USER_IS_NOT_FOUND("Пользователь не найден"),
     SHIFT_IS_NOT_FOUND("Смена не найдена"),

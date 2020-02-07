@@ -1,14 +1,11 @@
 package com.wrf.backend.model.response;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public final class GeneralIdDTO {
 
     private final String id;
-
-    public GeneralIdDTO(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
 }

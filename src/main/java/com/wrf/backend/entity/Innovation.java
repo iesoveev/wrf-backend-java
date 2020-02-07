@@ -1,11 +1,15 @@
 package com.wrf.backend.entity;
 
 import com.wrf.backend.Description;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Innovations")
+@Getter
+@Setter
 public class Innovation extends BaseEntity {
 
     @Column
@@ -28,25 +32,5 @@ public class Innovation extends BaseEntity {
         this.text = text;
         this.categoryId = categoryId;
         this.userId = userId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public String getImageUuid() {
-        return imageUuid;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setImageUuid(String imageUuid) {
-        this.imageUuid = imageUuid;
     }
 }

@@ -53,7 +53,7 @@ public final class TokenAuthenticationFilter implements Filter {
 
         try {
             var token = Optional.ofNullable(getTokenFromHeader(request))
-                    .orElseThrow(() -> new UnauthorizedException(NO_AUTHORIZATION));
+                    .orElseThrow(UnauthorizedException::new);
             authService.checkAccessToken(token);
         } catch (UnauthorizedException e) {
             LOG.error(e);

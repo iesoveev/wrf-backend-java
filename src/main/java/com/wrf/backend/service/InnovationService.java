@@ -9,6 +9,7 @@ import com.wrf.backend.model.request.ImageRequestModel;
 import com.wrf.backend.model.request.UserInnovationRequest;
 import com.wrf.backend.model.response.CategoryDTO;
 import com.wrf.backend.model.response.InnovationDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class InnovationService {
 
     final DbApi dbApi;
@@ -29,16 +31,6 @@ public class InnovationService {
     final AuthService authService;
 
     final AppConfig appConfig;
-
-    @Autowired
-    public InnovationService(DbApi dbApi, HibernateTemplate hibernateTemplate,
-                             ImageService imageService, AuthService authService, AppConfig appConfig) {
-        this.dbApi = dbApi;
-        this.hibernateTemplate = hibernateTemplate;
-        this.imageService = imageService;
-        this.authService = authService;
-        this.appConfig = appConfig;
-    }
 
     @Transactional
     public InnovationDTO addInnovation(final UserInnovationRequest request) {

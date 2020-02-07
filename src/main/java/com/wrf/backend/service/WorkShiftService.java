@@ -6,6 +6,7 @@ import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.request.*;
 import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import static com.wrf.backend.exception.ErrorMessage.*;
 import static com.wrf.backend.utils.DateUtils.*;
 
 @Service
+@RequiredArgsConstructor
 public class WorkShiftService {
 
     final HibernateTemplate hibernateTemplate;
@@ -23,13 +25,6 @@ public class WorkShiftService {
     final AuthService authService;
 
     final DbApi dbApi;
-
-    @Autowired
-    public WorkShiftService(HibernateTemplate hibernateTemplate, AuthService authService, DbApi dbApi) {
-        this.hibernateTemplate = hibernateTemplate;
-        this.authService = authService;
-        this.dbApi = dbApi;
-    }
 
     @Transactional
     public GeneralIdDTO openWS(final ShiftRequestModel model) {

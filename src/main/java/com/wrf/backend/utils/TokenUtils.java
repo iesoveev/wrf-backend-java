@@ -15,7 +15,7 @@ public class TokenUtils {
 
     public static void validate(UserToken userToken) {
         if (userToken == null || userToken.getExpirationTime().before(new Date())) {
-            throw new UnauthorizedException("Необходима авторизация");
+            throw new UnauthorizedException();
         }
     }
 
