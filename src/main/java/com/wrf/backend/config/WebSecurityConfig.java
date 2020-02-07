@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication()
-                .withUser(monitoringLogin).password(monitoringPassword).roles("monitoring");
+                .withUser(monitoringLogin).password("{noop}" + monitoringPassword).roles("monitoring");
     }
 
     @Override
