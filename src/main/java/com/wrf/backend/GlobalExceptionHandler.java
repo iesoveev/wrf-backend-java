@@ -5,8 +5,10 @@ import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.strategy.DefaultExceptionStrategy;
 import com.wrf.backend.strategy.BusinessExceptionStrategy;
+import com.wrf.backend.strategy.HttpRequestMethodNotSupportedExceptionStrategy;
 import com.wrf.backend.strategy.UnauthorizedExceptionStrategy;
 import net.bytebuddy.implementation.MethodAccessorFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -25,14 +27,14 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver {
 
         var exceptionHandler = new com.wrf.backend.strategy.ExceptionHandler();
 
-
         if (e instanceof BusinessException)
             exceptionHandler.setExceptionStrategy(new BusinessExceptionStrategy());
         else if (e instanceof UnauthorizedException)
             exceptionHandler.setExceptionStrategy(new UnauthorizedExceptionStrategy());
+        else if (e instanceof HttpRequestMethodNotSupportedException)
+            exceptionHandler.setExceptionStrategy(new HttpRequestMethodNotSupportedExceptionStrategy());
         else
             exceptionHandler.setExceptionStrategy(new DefaultExceptionStrategy());
-
 
         Response response = exceptionHandler.process(e, httpResponse);
 

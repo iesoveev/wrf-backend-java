@@ -8,9 +8,9 @@ import com.wrf.backend.model.request.LoginModel;
 import com.wrf.backend.model.request.UserRegistrationModel;
 import com.wrf.backend.model.response.TokenDTO;
 import com.wrf.backend.model.response.UserInfo;
-import com.wrf.backend.model.response.UserToken;
+import com.wrf.backend.redis.hash.UserToken;
+import com.wrf.backend.redis.repository.RedisUserTokenRepository;
 import com.wrf.backend.utils.PasswordUtils;
-import com.wrf.backend.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,6 @@ import org.springframework.web.context.annotation.RequestScope;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
 
@@ -28,17 +27,18 @@ import static com.wrf.backend.exception.ErrorMessage.*;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private static final Map<String, UserToken> accessTokenMap = new ConcurrentHashMap<>();
-
     private UserInfo userInfo;
 
     private final DbApi dbApi;
 
     private final HibernateTemplate hibernateTemplate;
 
+    private final RedisUserTokenRepository redisUserTokenRepository;
+
     public void checkAccessToken(String token) {
-        var userToken = accessTokenMap.get(token);
-        TokenUtils.validate(userToken);
+        var userToken = redisUserTokenRepository.findByToken(token);
+        Optional.ofNullable(userToken)
+                .orElseThrow(UnauthorizedException::new);
         var user = dbApi.getUserByPhone(userToken.getPhone());
         userInfo = new UserInfo(user.getPhone(), user.getId());
     }
@@ -50,7 +50,7 @@ public class AuthService {
 
         user.setLastLoginTime(new Date());
         hibernateTemplate.update(user);
-        return createAccessAndRefreshTokens(model.getPhone());
+        return createToken(model.getPhone());
     }
 
     @Transactional
@@ -59,16 +59,18 @@ public class AuthService {
         var passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
         hibernateTemplate.save(new User(model.getName(), model.getSurname(),
                 model.getPhone(), passwordHash));
-        return createAccessAndRefreshTokens(model.getPhone());
+        return createToken(model.getPhone());
     }
 
-    private TokenDTO createAccessAndRefreshTokens(final String phone) {
+    private TokenDTO createToken(final String phone) {
+        List<UserToken> userTokens = redisUserTokenRepository.findByPhone(phone);
+        if (!userTokens.isEmpty()) {
+            redisUserTokenRepository.deleteAll(userTokens);
+        }
         var accessToken = UUID.randomUUID().toString();
-        accessTokenMap.entrySet().stream()
-                .filter(el -> el.getValue().getPhone().equals(phone))
-                .forEach(el -> accessTokenMap.remove(el.getKey()));
+        var userToken = new UserToken(phone, accessToken);
 
-        accessTokenMap.put(accessToken, new UserToken(phone, TokenUtils.getTokenExpirationTime()));
+        redisUserTokenRepository.save(userToken);
         return new TokenDTO(accessToken);
     }
 
