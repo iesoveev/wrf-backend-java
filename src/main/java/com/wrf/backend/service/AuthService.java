@@ -54,11 +54,12 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDTO addUser(final UserRegistrationModel model) throws NoSuchAlgorithmException {
+    public TokenDTO addUser(final UserRegistrationModel model,
+                            final String deviceToken) throws NoSuchAlgorithmException {
         dbApi.checkUserExist(model.getPhone());
         var passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
         hibernateTemplate.save(new User(model.getName(), model.getSurname(),
-                model.getPhone(), passwordHash));
+                model.getPhone(), passwordHash, deviceToken));
         return createToken(model.getPhone());
     }
 

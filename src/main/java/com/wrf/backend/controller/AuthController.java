@@ -27,9 +27,11 @@ public class AuthController {
 
     @ApiOperation(value = "Регистрация")
     @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public TokenDTO addUser(@RequestBody UserRegistrationModel model) throws IllegalAccessException, NoSuchAlgorithmException {
+    public TokenDTO addUser(@RequestBody UserRegistrationModel model,
+                            @RequestHeader String deviceToken) throws IllegalAccessException, NoSuchAlgorithmException {
+        // todo придумать что делать, если токен будет не валидным и как его проверить
         ValidationUtils.validate(model);
-        return authService.addUser(model);
+        return authService.addUser(model, deviceToken);
     }
 
     @ApiOperation(value = "Авторизация")

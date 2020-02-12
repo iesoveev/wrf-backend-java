@@ -42,13 +42,18 @@ public class User extends BaseEntity {
     @Column
     private Date lastLoginTime;
 
-    public User(String name, String surName, String phone, String password) {
+    @Column
+    private String deviceToken;
+
+    public User(String name, String surName,
+                String phone, String password, String deviceToken) {
         this.name = name;
         this.surName = surName;
         this.fullName = name + " " + surName;
         this.phone = phone;
         this.password = password;
         this.lastLoginTime = new Date();
+        this.deviceToken = deviceToken;
     }
 
     public User(String name) {
