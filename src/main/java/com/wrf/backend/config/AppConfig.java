@@ -25,4 +25,7 @@ public class AppConfig {
 
     @Value("${image.path}")
     private String imagePath;
+
+    @Value("${firebase.account.file}")
+    private String firebaseAccountFile;
 }

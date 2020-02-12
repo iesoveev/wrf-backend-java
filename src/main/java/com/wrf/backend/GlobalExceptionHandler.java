@@ -3,12 +3,10 @@ package com.wrf.backend;
 import com.wrf.backend.exception.UnauthorizedException;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.response.Response;
-import com.wrf.backend.strategy.DefaultExceptionStrategy;
-import com.wrf.backend.strategy.BusinessExceptionStrategy;
-import com.wrf.backend.strategy.HttpRequestMethodNotSupportedExceptionStrategy;
-import com.wrf.backend.strategy.UnauthorizedExceptionStrategy;
+import com.wrf.backend.strategy.*;
 import net.bytebuddy.implementation.MethodAccessorFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -33,6 +31,8 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver {
             exceptionHandler.setExceptionStrategy(new UnauthorizedExceptionStrategy());
         else if (e instanceof HttpRequestMethodNotSupportedException)
             exceptionHandler.setExceptionStrategy(new HttpRequestMethodNotSupportedExceptionStrategy());
+        else if (e instanceof MissingRequestHeaderException)
+            exceptionHandler.setExceptionStrategy(new MissingRequestHeaderExceptionStrategy());
         else
             exceptionHandler.setExceptionStrategy(new DefaultExceptionStrategy());
 

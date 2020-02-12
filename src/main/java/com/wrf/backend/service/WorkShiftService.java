@@ -12,6 +12,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
 import static com.wrf.backend.utils.DateUtils.*;
@@ -25,6 +26,8 @@ public class WorkShiftService {
     final AuthService authService;
 
     final DbApi dbApi;
+
+    final AsyncService asyncService;
 
     @Transactional
     public GeneralIdDTO openWS(final ShiftRequestModel model) {
@@ -80,6 +83,13 @@ public class WorkShiftService {
         workShift.getEvents().add(event);
 
         hibernateTemplate.update(workShift);
+
+        List<String> receivers = workShift.getMembers().stream()
+                .map(User::getDeviceToken)
+                .filter(token -> !token.equals(user.getDeviceToken()))
+                .collect(Collectors.toUnmodifiableList());
+
+        asyncService.sendNotify(receivers, event.getText());
     }
 
     @Transactional
