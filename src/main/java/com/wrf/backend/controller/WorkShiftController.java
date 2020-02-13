@@ -69,9 +69,12 @@ public class WorkShiftController {
         return workShiftService.getEvents(shiftId);
     }
 
-    @ApiOperation(value = "Поиск событый по тексу")
+    @ApiOperation(value = "Поиск событий по тексу")
     @GetMapping("/search/events")
-    public List<EventDTO> searchEventsByText(@RequestParam String text) {
-        return workShiftService.search(text);
+    public List<EventDTO> searchEventsByText(@RequestParam String text,
+                                             @RequestParam Integer limit,
+                                             @RequestParam Integer offset)
+    {
+        return workShiftService.search(text, limit, offset);
     }
 }

@@ -1,6 +1,6 @@
 package com.wrf.backend.service;
 
-import com.wrf.backend.DbApi;
+import com.wrf.backend.db_api.LogDbApi;
 import com.wrf.backend.entity.AndroidLog;
 import com.wrf.backend.mapper.LogMapper;
 import com.wrf.backend.model.request.GeneralPeriodModel;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LogService {
 
-    final DbApi dbApi;
+    final LogDbApi logDbApi;
 
     final HibernateTemplate hibernateTemplate;
 
@@ -27,7 +27,7 @@ public class LogService {
     }
 
     public List<AndroidLogDTO> findLog(final GeneralPeriodModel model) {
-        List<AndroidLog> logs = dbApi.getAndroidLog(model);
+        List<AndroidLog> logs = logDbApi.getAndroidLog(model);
         List<AndroidLogDTO> logDTOs = new ArrayList<>();
 
         logs.forEach( log ->

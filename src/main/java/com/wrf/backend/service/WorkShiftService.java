@@ -1,18 +1,17 @@
 package com.wrf.backend.service;
 
-import com.wrf.backend.DbApi;
+import com.wrf.backend.db_api.UserDbApi;
+import com.wrf.backend.db_api.WorkShiftDbApi;
 import com.wrf.backend.entity.*;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.request.*;
 import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
 import static com.wrf.backend.utils.DateUtils.*;
@@ -25,13 +24,15 @@ public class WorkShiftService {
 
     final AuthService authService;
 
-    final DbApi dbApi;
+    final UserDbApi userDbApi;
+
+    final WorkShiftDbApi workShiftDbApi;
 
     final AsyncService asyncService;
 
     @Transactional
     public GeneralIdDTO openWS(final ShiftRequestModel model) {
-        List<User> members = dbApi.getUsers(model.getMemberIds());
+        List<User> members = userDbApi.findUsers(model.getMemberIds());
         var ws = new WorkShift();
         ws.setMembers(members);
         ws.setOpenedTime(new Date());
@@ -44,8 +45,8 @@ public class WorkShiftService {
 
     @Transactional
     public void addMember(final AddMemberToWSModel model) {
-        var workShift = dbApi.getWorkShift(model.getShiftId());
-        var user = dbApi.getUser(model.getUserId());
+        var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
+        var user = userDbApi.findUser(model.getUserId());
 
         if (workShift.getMembers().contains(user))
             throw new BusinessException(USER_IS_ALREADY_ON_THE_SHIFT);
@@ -58,9 +59,9 @@ public class WorkShiftService {
 
     @Transactional
     public void replaceMember(final ReplaceMemberModel model) {
-        var workShift = dbApi.getWorkShift(model.getShiftId());
-        var targetUser = dbApi.getUser(model.getTargetUserId());
-        var newUser = dbApi.getUser(model.getNewUserId());
+        var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
+        var targetUser = userDbApi.findUser(model.getTargetUserId());
+        var newUser = userDbApi.findUser(model.getNewUserId());
         workShift.getMembers().remove(targetUser);
         workShift.getMembers().add(newUser);
 
@@ -69,13 +70,13 @@ public class WorkShiftService {
 
     @Transactional
     public void addEvent(final EventModel model) {
-        var workShift = dbApi.getWorkShift(model.getShiftId());
+        var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
 
         var event = new Event();
         event.setText(model.getText());
         event.setWorkShift(workShift);
         event.setWorkShiftId(workShift.getId());
-        var user = dbApi.getUser(authService.getUserInfo().getId());
+        var user = userDbApi.findUser(authService.getUserInfo().getId());
         event.setUser(user);
         event.setUserId(user.getId());
         hibernateTemplate.save(event);
@@ -84,17 +85,17 @@ public class WorkShiftService {
 
         hibernateTemplate.update(workShift);
 
-        List<String> receivers = workShift.getMembers().stream()
-                .map(User::getDeviceToken)
-                .filter(token -> !token.equals(user.getDeviceToken()))
-                .collect(Collectors.toUnmodifiableList());
-
-        asyncService.sendNotify(receivers, event.getText());
+//        List<String> receivers = workShift.getMembers().stream()
+//                .map(User::getDeviceToken)
+//                .filter(token -> !token.equals(user.getDeviceToken()))
+//                .collect(Collectors.toUnmodifiableList());
+//
+//        asyncService.sendNotify(receivers, event.getText());
     }
 
     @Transactional
     public List<EventDTO> getEvents(final String shiftId) {
-        var events = dbApi.getEvents(shiftId);
+        var events = workShiftDbApi.findEvents(shiftId);
         events.forEach( event -> {
             event.setCreatedTime(dateTimeFormatter.format(event.getCreatedDateTime()));
             event.setCreatedDateTime(null);
@@ -104,7 +105,7 @@ public class WorkShiftService {
 
     @Transactional
     public void closeWS(final GeneralIdModel model) {
-        var workShift = dbApi.getWorkShift(model.getId());
+        var workShift = workShiftDbApi.findWorkShift(model.getId());
 
         if (workShift.getClosedTime() != null)
             throw new BusinessException(SHIFT_IS_ALREADY_CLOSED);
@@ -115,8 +116,10 @@ public class WorkShiftService {
     }
 
     @Transactional(readOnly = true)
-    public List<EventDTO> search(final String text) {
-        var events = dbApi.getEventsByText(text);
+    public List<EventDTO> search(final String text,
+                                 final Integer limit,
+                                 final Integer offset) {
+        var events = workShiftDbApi.findEventsByText(text, limit, offset);
         events.forEach( event -> {
             event.setCreatedTime(dateTimeFormatter.format(event.getCreatedDateTime()));
             event.setCreatedDateTime(null);

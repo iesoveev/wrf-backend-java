@@ -1,6 +1,6 @@
 package com.wrf.backend.service;
 
-import com.wrf.backend.DbApi;
+import com.wrf.backend.db_api.UserDbApi;
 import com.wrf.backend.entity.User;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.exception.UnauthorizedException;
@@ -29,7 +29,7 @@ public class AuthService {
 
     private UserInfo userInfo;
 
-    private final DbApi dbApi;
+    private final UserDbApi userDbApi;
 
     private final HibernateTemplate hibernateTemplate;
 
@@ -39,13 +39,13 @@ public class AuthService {
         var userToken = redisUserTokenRepository.findByToken(token);
         Optional.ofNullable(userToken)
                 .orElseThrow(UnauthorizedException::new);
-        var user = dbApi.getUserByPhone(userToken.getPhone());
+        var user = userDbApi.getUserByPhone(userToken.getPhone());
         userInfo = new UserInfo(user.getPhone(), user.getId());
     }
 
     @Transactional
     public TokenDTO login(final LoginModel model) throws NoSuchAlgorithmException {
-        var user = Optional.ofNullable(dbApi.getUser(model.getPhone(), model.getPassword()))
+        var user = Optional.ofNullable(userDbApi.getUser(model.getPhone(), model.getPassword()))
                 .orElseThrow(() -> new BusinessException(INVALID_LOGIN_DATA));
 
         user.setLastLoginTime(new Date());
@@ -56,7 +56,7 @@ public class AuthService {
     @Transactional
     public TokenDTO addUser(final UserRegistrationModel model,
                             final String deviceToken) throws NoSuchAlgorithmException {
-        dbApi.checkUserExist(model.getPhone());
+        userDbApi.checkUserExist(model.getPhone());
         var passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
         hibernateTemplate.save(new User(model.getName(), model.getSurname(),
                 model.getPhone(), passwordHash, deviceToken));

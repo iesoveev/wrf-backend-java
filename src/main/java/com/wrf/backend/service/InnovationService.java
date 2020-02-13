@@ -1,7 +1,7 @@
 package com.wrf.backend.service;
 
-import com.wrf.backend.DbApi;
 import com.wrf.backend.config.AppConfig;
+import com.wrf.backend.db_api.InnovationDbApi;
 import com.wrf.backend.entity.Innovation;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.exception.ErrorMessage;
@@ -10,7 +10,6 @@ import com.wrf.backend.model.request.UserInnovationRequest;
 import com.wrf.backend.model.response.CategoryDTO;
 import com.wrf.backend.model.response.InnovationDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InnovationService {
 
-    final DbApi dbApi;
+    final InnovationDbApi innovationDbApi;
 
     final HibernateTemplate hibernateTemplate;
 
@@ -45,7 +44,7 @@ public class InnovationService {
     }
 
     public List<CategoryDTO> getAllCategories() {
-        return dbApi.getAllCategories();
+        return innovationDbApi.getAllCategories();
     }
 
     public void saveImageByInnovationId(final ImageRequestModel model) {

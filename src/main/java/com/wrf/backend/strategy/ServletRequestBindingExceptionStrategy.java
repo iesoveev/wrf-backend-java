@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class MissingRequestHeaderExceptionStrategy implements ExceptionStrategy {
+public class ServletRequestBindingExceptionStrategy implements ExceptionStrategy {
 
     @Override
     public Response process(Exception e, HttpServletResponse response) {
