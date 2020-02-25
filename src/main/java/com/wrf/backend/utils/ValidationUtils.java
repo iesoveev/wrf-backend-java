@@ -15,7 +15,7 @@ public class ValidationUtils {
         List<String> errors = new ArrayList<>();
 
         for (Field field : model.getClass().getDeclaredFields()) {
-            String fullName = field.getAnnotation(JsonProperty.class).value();
+            String fullName = field.getAnnotation(ApiModelProperty.class).value();
             if (!field.isAccessible())
                 field.setAccessible(true);
 

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.transform.Transformers;
+import org.springframework.lang.Nullable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public abstract class DbApi {
         this.hibernateTemplate = hibernateTemplate;
     }
 
+    @Nullable
     public Object findFirst(final DetachedCriteria criteria) {
-        List result = hibernateTemplate.findByCriteria(criteria, 0, 1);
+        final List result = hibernateTemplate.findByCriteria(criteria, 0, 1);
         return result.isEmpty() ? null : result.get(0);
     }
 
@@ -38,7 +40,7 @@ public abstract class DbApi {
 
     protected static DetachedCriteria createCriteria(Class<? extends BaseEntity> clazz,
                                                      Class<? extends BaseDTO> transformerClass, final ProjectionList projections) {
-        var criteria = DetachedCriteria.forClass(clazz);
+        final var criteria = DetachedCriteria.forClass(clazz);
         criteria.setProjection(projections);
         criteria.setResultTransformer(Transformers.aliasToBean(transformerClass));
         return criteria;

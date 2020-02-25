@@ -8,12 +8,10 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-
 import static com.wrf.backend.exception.ErrorMessage.USER_IS_ALREADY_REGISTERED;
 import static com.wrf.backend.exception.ErrorMessage.USER_IS_NOT_FOUND;
 
@@ -28,39 +26,39 @@ public class UserDbApi extends DbApi {
     }
 
     public User getUser(final String phone, final String password) throws NoSuchAlgorithmException {
-        var passwordHash = PasswordUtils.getPasswordHash(password);
-        var criteria = DetachedCriteria.forClass(User.class);
+        final String passwordHash = PasswordUtils.getPasswordHash(password);
+        final var criteria = DetachedCriteria.forClass(User.class);
         criteria.add(Restrictions.eq(PHONE_PROPERTY_NAME, phone));
         criteria.add(Restrictions.eq(PASSWORD_PROPERTY_NAME, passwordHash));
         return (User) findFirst(criteria);
     }
 
     public User findUser(final String id) {
-        var user = hibernateTemplate.get(User.class, id);
+        final var user = hibernateTemplate.get(User.class, id);
         return Optional.ofNullable(user)
                 .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
     }
 
     public User getUserByPhone(final String phone) {
-        var user = (User) findFirst(DetachedCriteria.forClass(User.class)
+        final var user = (User) findFirst(DetachedCriteria.forClass(User.class)
                 .add(Restrictions.eq(PHONE_PROPERTY_NAME, phone)));
         return Optional.ofNullable(user)
                 .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
     }
 
     public void checkUserExist(final String phone) {
-        var criteria = DetachedCriteria.forClass(User.class);
+        final var criteria = DetachedCriteria.forClass(User.class);
         criteria.add(Restrictions.eq("phone", phone));
         criteria.setProjection(
                 Projections.rowCount()
         );
-        var count = (Long) findFirst(criteria);
+        final long count = (Long) findFirst(criteria);
         if (count > 0)
             throw new BusinessException(MessageFormat.format(USER_IS_ALREADY_REGISTERED.getMessage(), phone));
     }
 
     public List<User> findUsers(final List<String> ids) {
-        var criteria = DetachedCriteria.forClass(User.class)
+        final var criteria = DetachedCriteria.forClass(User.class)
                 .add(Restrictions.in("id", ids));
         return (List<User>) hibernateTemplate.findByCriteria(criteria);
     }

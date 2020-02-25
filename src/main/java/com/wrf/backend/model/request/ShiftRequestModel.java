@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public class ShiftRequestModel {
 
-    @ApiModelProperty("Идентификаторы участников команды")
+    @ApiModelProperty(value = "Идентификаторы участников команды", required = true)
     @JsonProperty("memberIds")
     private List<String> memberIds;
 }

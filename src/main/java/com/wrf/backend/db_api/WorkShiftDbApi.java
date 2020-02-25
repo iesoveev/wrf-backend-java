@@ -6,6 +6,7 @@ import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.response.EventDTO;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
+import org.springframework.lang.Nullable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,15 +23,15 @@ public class WorkShiftDbApi extends DbApi {
     }
 
     public WorkShift findWorkShift(String id) {
-        var workShift = hibernateTemplate.get(WorkShift.class, id);
+        final var workShift = hibernateTemplate.get(WorkShift.class, id);
         return Optional.ofNullable(workShift)
                 .orElseThrow(() -> new BusinessException(SHIFT_IS_NOT_FOUND));
     }
 
-    public List<EventDTO> findEvents(final String id) {
-        var projections = projectionsForEvents();
+    public List<EventDTO> findEvents(@Nullable final String id) {
+        final var projections = projectionsForEvents();
 
-        var criteria = createCriteria(Event.class, EventDTO.class, projections);
+        final var criteria = createCriteria(Event.class, EventDTO.class, projections);
 
         criteria.createAlias("user", "user", JoinType.LEFT_OUTER_JOIN);
         criteria.add(Restrictions.eq("workShiftId", id));
@@ -41,9 +42,9 @@ public class WorkShiftDbApi extends DbApi {
     public List<EventDTO> findEventsByText(final String text,
                                            final Integer limit,
                                            final Integer offset) {
-        var projections = projectionsForEvents();
+        final var projections = projectionsForEvents();
 
-        var criteria = createCriteria(Event.class, EventDTO.class, projections);
+        final var criteria = createCriteria(Event.class, EventDTO.class, projections);
 
         criteria.createAlias("user", "user", JoinType.LEFT_OUTER_JOIN);
         criteria.add(Restrictions.ilike("text", text, MatchMode.ANYWHERE));

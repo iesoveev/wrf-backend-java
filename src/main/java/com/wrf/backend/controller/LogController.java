@@ -6,6 +6,7 @@ import com.wrf.backend.model.response.AndroidLogDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.LogService;
 import com.wrf.backend.utils.ValidationUtils;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -21,6 +22,7 @@ public class LogController {
 
     final HibernateTemplate hibernateTemplate;
 
+    @ApiOperation(value = "Сохранение лога для андроида")
     @PutMapping("/push")
     public Response pushLog(@RequestBody AndroidLogModel model) throws IllegalAccessException {
         ValidationUtils.validate(model);
@@ -28,6 +30,7 @@ public class LogController {
         return new Response();
     }
 
+    @ApiOperation(value = "Получение логов по периоду")
     @GetMapping("/find")
     public List<AndroidLogDTO> findLog(@RequestBody GeneralPeriodModel model) throws IllegalAccessException {
         ValidationUtils.validate(model);

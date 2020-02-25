@@ -2,6 +2,7 @@ package com.wrf.backend.entity;
 
 import com.wrf.backend.Description;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "Innovations")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Innovation extends BaseEntity {
 
     @Column

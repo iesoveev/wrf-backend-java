@@ -23,8 +23,11 @@ public class AppConfig {
     @Value("${spring.jpa.properties.hibernate.dialect}")
     private String dialect;
 
-    @Value("${image.path}")
-    private String imagePath;
+    @Value("${onboarding.image.path}")
+    private String onboardingImagePath;
+
+    @Value("${innovation.image.path}")
+    private String innovationImagePath;
 
     @Value("${firebase.account.file}")
     private String firebaseAccountFile;

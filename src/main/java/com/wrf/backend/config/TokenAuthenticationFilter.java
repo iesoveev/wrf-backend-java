@@ -34,10 +34,10 @@ public final class TokenAuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        var response = (HttpServletResponse) resp;
-        var wrappedRequest = new ContentCachingRequestWrapper((HttpServletRequest) req);
-        var request = (HttpServletRequest) req;
-        var path = request.getServletPath();
+        final var response = (HttpServletResponse) resp;
+        final var wrappedRequest = new ContentCachingRequestWrapper((HttpServletRequest) req);
+        final var request = (HttpServletRequest) req;
+        final var path = request.getServletPath();
         long count = FREE_SERVLET_PATHS.stream()
                 .filter(freePath -> StringUtils.startsWith(path, freePath))
                 .count();

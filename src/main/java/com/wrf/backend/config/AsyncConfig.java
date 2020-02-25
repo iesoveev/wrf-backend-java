@@ -1,5 +1,6 @@
 package com.wrf.backend.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -13,7 +14,15 @@ public class AsyncConfig implements AsyncConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {
-        var executor = new ThreadPoolTaskExecutor();
+        final var executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.initialize();
+        return executor;
+    }
+
+    @Bean
+    public Executor imageExecutor() {
+        final var executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);
         executor.initialize();
         return executor;

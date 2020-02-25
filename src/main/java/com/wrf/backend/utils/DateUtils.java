@@ -1,6 +1,7 @@
 package com.wrf.backend.utils;
 
 import com.wrf.backend.exception.BusinessException;
+import org.springframework.lang.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,7 @@ public class DateUtils {
     private static final String dateTimePattern = "dd.MM.yyyy HH:mm:ss";
     public static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(dateTimePattern);
 
-    public static Date parse(String date) {
+    public static Date parse(@Nullable final String date) {
         try {
             return dateTimeFormatter.parse(date);
         } catch (ParseException e) {

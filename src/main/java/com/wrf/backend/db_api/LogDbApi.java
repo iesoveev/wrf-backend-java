@@ -18,9 +18,9 @@ public class LogDbApi extends DbApi {
     }
 
     public List<AndroidLog> getAndroidLog(GeneralPeriodModel model) {
-        var criteria = DetachedCriteria.forClass(AndroidLog.class);
-        var beginDate = DateUtils.parse(model.getBeginDate());
-        var endDate = DateUtils.parse(model.getEndDate());
+        final var criteria = DetachedCriteria.forClass(AndroidLog.class);
+        final var beginDate = DateUtils.parse(model.getBeginDate());
+        final var endDate = DateUtils.parse(model.getEndDate());
         criteria.add(Restrictions.between("createdTime", beginDate, endDate));
         return (List<AndroidLog>) find(criteria);
     }

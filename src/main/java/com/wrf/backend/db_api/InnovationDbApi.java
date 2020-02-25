@@ -16,10 +16,10 @@ public class InnovationDbApi extends DbApi {
     }
 
     public List<CategoryDTO> getAllCategories() {
-        var projections = Projections.projectionList()
+        final var projections = Projections.projectionList()
                 .add(Projections.property("id"), "id")
                 .add(Projections.property("name"), "name");
-        var criteria = createCriteria(InnovationCategory.class, CategoryDTO.class, projections);
+        final var criteria = createCriteria(InnovationCategory.class, CategoryDTO.class, projections);
         return (List<CategoryDTO>) find(criteria);
     }
 }

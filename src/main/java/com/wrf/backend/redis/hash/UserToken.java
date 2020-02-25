@@ -3,7 +3,6 @@ package com.wrf.backend.redis.hash;
 import com.wrf.backend.Description;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -14,9 +13,6 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @RedisHash("userToken")
 public class UserToken {
-
-    @Value("${access.token.ttl}")
-    private Integer tokenTtl;
 
     @Id
     private String id;
@@ -34,6 +30,6 @@ public class UserToken {
     public UserToken(String phone, String token) {
         this.phone = phone;
         this.token = token;
-        this.ttl = tokenTtl;
+        this.ttl = 1;
     }
 }

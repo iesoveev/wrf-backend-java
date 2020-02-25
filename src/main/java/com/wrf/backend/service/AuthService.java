@@ -35,17 +35,17 @@ public class AuthService {
 
     private final RedisUserTokenRepository redisUserTokenRepository;
 
-    public void checkAccessToken(String token) {
-        var userToken = redisUserTokenRepository.findByToken(token);
+    public void checkAccessToken(final String token) {
+        final var userToken = redisUserTokenRepository.findByToken(token);
         Optional.ofNullable(userToken)
                 .orElseThrow(UnauthorizedException::new);
-        var user = userDbApi.getUserByPhone(userToken.getPhone());
+        final var user = userDbApi.getUserByPhone(userToken.getPhone());
         userInfo = new UserInfo(user.getPhone(), user.getId());
     }
 
     @Transactional
     public TokenDTO login(final LoginModel model) throws NoSuchAlgorithmException {
-        var user = Optional.ofNullable(userDbApi.getUser(model.getPhone(), model.getPassword()))
+        final var user = Optional.ofNullable(userDbApi.getUser(model.getPhone(), model.getPassword()))
                 .orElseThrow(() -> new BusinessException(INVALID_LOGIN_DATA));
 
         user.setLastLoginTime(new Date());
@@ -57,19 +57,19 @@ public class AuthService {
     public TokenDTO addUser(final UserRegistrationModel model,
                             final String deviceToken) throws NoSuchAlgorithmException {
         userDbApi.checkUserExist(model.getPhone());
-        var passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
+        final String passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
         hibernateTemplate.save(new User(model.getName(), model.getSurname(),
                 model.getPhone(), passwordHash, deviceToken));
         return createToken(model.getPhone());
     }
 
     private TokenDTO createToken(final String phone) {
-        List<UserToken> userTokens = redisUserTokenRepository.findByPhone(phone);
+        final List<UserToken> userTokens = redisUserTokenRepository.findByPhone(phone);
         if (!userTokens.isEmpty()) {
             redisUserTokenRepository.deleteAll(userTokens);
         }
-        var accessToken = UUID.randomUUID().toString();
-        var userToken = new UserToken(phone, accessToken);
+        final var accessToken = UUID.randomUUID().toString();
+        final var userToken = new UserToken(phone, accessToken);
 
         redisUserTokenRepository.save(userToken);
         return new TokenDTO(accessToken);

@@ -5,15 +5,20 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.sql.DataSource;
 import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
+@EnableTransactionManagement
 public class DBConfiguration {
 
     private static final Logger LOG = LogManager.getLogger(DBConfiguration.class);
@@ -40,7 +45,7 @@ public class DBConfiguration {
         if (config.getUrl() == null) {
             LOG.error("DBConfiguration. pg.password not set!");
         }
-        var dataSource = new DriverManagerDataSource();
+        final var dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(config.getDriverClassName());
         dataSource.setUrl(config.getUrl());
         dataSource.setUsername(config.getUsername());
@@ -49,9 +54,10 @@ public class DBConfiguration {
     }
 
     @Bean
+    @Primary
     LocalSessionFactoryBean sessionFactory() {
-        var sessionFactory = new LocalSessionFactoryBean();
-        var hibernateProperties = new Properties();
+        final var sessionFactory = new LocalSessionFactoryBean();
+        final var hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.dialect", config.getDialect());
         hibernateProperties.setProperty("hibernate.show_sql", "false");
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hbm2ddlAuto);
@@ -66,8 +72,14 @@ public class DBConfiguration {
     }
 
     @Bean
-    HibernateTransactionManager transactionManager() {
-        return new HibernateTransactionManager(Objects.requireNonNull(sessionFactory().getObject()));
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final var vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+        final var factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan(PACKAGES_TO_SCAN);
+        factory.setDataSource(dataSource());
+        return factory;
     }
 
     @Bean

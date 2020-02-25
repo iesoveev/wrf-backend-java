@@ -52,7 +52,7 @@ public class InnovationService {
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INNOVATION_IS_NOT_FOUND));
 
         String imageUuid = UUID.randomUUID().toString();
-        imageService.saveImage(model.getImage(), appConfig.getImagePath() + imageUuid);
+        imageService.saveImage(model.getImage(), appConfig.getInnovationImagePath() + imageUuid, imageUuid);
         innovation.setImageUuid(imageUuid);
         hibernateTemplate.saveOrUpdate(innovation);
     }

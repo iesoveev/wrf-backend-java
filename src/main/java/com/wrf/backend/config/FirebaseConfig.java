@@ -25,9 +25,9 @@ public class FirebaseConfig {
 
     @PostConstruct
     void initialize() throws IOException {
-        Path p = Paths.get(appConfig.getFirebaseAccountFile());
+        final Path p = Paths.get(appConfig.getFirebaseAccountFile());
         try (InputStream serviceAccount = Files.newInputStream(p)) {
-            FirebaseOptions options = new FirebaseOptions.Builder()
+            final FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
             FirebaseApp.initializeApp(options);
