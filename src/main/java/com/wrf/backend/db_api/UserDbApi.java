@@ -2,10 +2,13 @@ package com.wrf.backend.db_api;
 
 import com.wrf.backend.entity.User;
 import com.wrf.backend.exception.BusinessException;
+import com.wrf.backend.model.response.RoleDTO;
 import com.wrf.backend.utils.PasswordUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.hibernate.transform.Transformers;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import java.security.NoSuchAlgorithmException;
@@ -61,5 +64,20 @@ public class UserDbApi extends DbApi {
         final var criteria = DetachedCriteria.forClass(User.class)
                 .add(Restrictions.in("id", ids));
         return (List<User>) hibernateTemplate.findByCriteria(criteria);
+    }
+
+    public List<RoleDTO> findRolesByUser(final String userId) {
+        final var criteria = DetachedCriteria.forClass(User.class);
+        criteria.createAlias("roles", "role", JoinType.LEFT_OUTER_JOIN);
+
+        criteria.add(Restrictions.eq("id", userId));
+
+        criteria.setProjection(
+                Projections.projectionList()
+                        .add(Projections.property("role.id"), "id")
+                        .add(Projections.property("role.name"), "name")
+        );
+        criteria.setResultTransformer(Transformers.aliasToBean(RoleDTO.class));
+        return (List<RoleDTO>) hibernateTemplate.findByCriteria(criteria);
     }
 }

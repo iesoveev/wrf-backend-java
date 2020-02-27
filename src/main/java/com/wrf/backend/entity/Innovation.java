@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Innovations")
@@ -18,15 +20,15 @@ public class Innovation extends BaseEntity {
     @Description("Текст инновации")
     private String text;
 
-    @Column
+    @Column(name = "category_id")
     @Description("Идентификатор категории")
     private String categoryId;
 
-    @Column
+    @Column(name = "image_uuid")
     @Description("Идентификатор изображения")
     private String imageUuid;
 
-    @Column
+    @Column(name = "user_id")
     @Description("Идентификатор пользователя")
     private String userId;
 

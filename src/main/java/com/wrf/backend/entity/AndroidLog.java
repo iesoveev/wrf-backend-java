@@ -1,6 +1,5 @@
 package com.wrf.backend.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "android_log")
 @Getter
 @NoArgsConstructor
 public class AndroidLog extends BaseEntity {
