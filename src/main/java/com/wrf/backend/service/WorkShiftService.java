@@ -36,7 +36,7 @@ public class WorkShiftService {
         final List<User> members = userDbApi.findUsers(model.getMemberIds());
         final var ws = new WorkShift();
         ws.setMembers(members);
-        ws.setOpenedTime(new Date());
+        ws.setOpen_at(new Date());
         ws.setUserOpenedId(authService.getUserInfo().getId());
 
         var id = (String) hibernateTemplate.save(ws);
@@ -108,10 +108,10 @@ public class WorkShiftService {
     public void closeWS(final GeneralIdModel model) {
         final var workShift = workShiftDbApi.findWorkShift(model.getId());
 
-        if (workShift.getClosedTime() != null)
+        if (workShift.getClose_at() != null)
             throw new BusinessException(SHIFT_IS_ALREADY_CLOSED);
 
-        workShift.setClosedTime(new Date());
+        workShift.setClose_at(new Date());
         workShift.setUserClosedId(authService.getUserInfo().getId());
         hibernateTemplate.update(workShift);
     }

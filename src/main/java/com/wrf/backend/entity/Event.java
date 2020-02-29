@@ -1,7 +1,6 @@
 package com.wrf.backend.entity;
 
 import com.wrf.backend.Description;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,17 +18,17 @@ public class Event extends BaseEntity {
     private String text;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "workShiftId", referencedColumnName = "id", updatable = false, insertable = false)
+    @JoinColumn(name = "work_shift_id", referencedColumnName = "id", updatable = false, insertable = false)
     private WorkShift workShift;
 
-    @Column
+    @Column(name = "work_shift_id")
     private String workShiftId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "id", updatable = false, insertable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, insertable = false)
     private User user;
 
-    @Column
+    @Column(name = "user_id")
     private String userId;
 }
 

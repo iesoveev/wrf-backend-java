@@ -30,26 +30,32 @@ public class User extends BaseEntity {
 
     @Column
     @Description("Фамилия")
-    private String surName;
+    private String surname;
 
-    @Column
+    @Column(name = "full_name")
     @Description("ФИО")
     private String fullName;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "members")
     private List<WorkShift> workShifts;
 
-    @Column
+    @Column(name = "last_login_time")
     private Date lastLoginTime;
 
-    @Column
+    @Column(name = "device_token")
     private String deviceToken;
 
-    public User(String name, String surName,
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
+
+    public User(String name, String surname,
                 String phone, String password, String deviceToken) {
         this.name = name;
-        this.surName = surName;
-        this.fullName = name + " " + surName;
+        this.surname = surname;
+        this.fullName = name + " " + surname;
         this.phone = phone;
         this.password = password;
         this.lastLoginTime = new Date();

@@ -3,6 +3,7 @@ package com.wrf.backend.entity;
 import com.wrf.backend.OnboardingType;
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Onboarding extends BaseEntity {
     @Column
     private String title;
 
-    @Column
+    @Column(name = "image_uuid")
     private String imageUuid;
 
     public void setTextIfPresent(String text) {
