@@ -13,7 +13,5 @@ public class EventDTO extends BaseDTO {
 
     private String username;
 
-    private Date createdDateTime;
 
-    private String createdTime;
 }

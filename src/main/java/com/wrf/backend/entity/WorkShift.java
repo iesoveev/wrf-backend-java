@@ -21,7 +21,7 @@ public class WorkShift extends BaseEntity {
     @Column(name = "open_at")
     private Date open_at;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "user_work_shift",
             joinColumns = @JoinColumn(name = "work_shift_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")

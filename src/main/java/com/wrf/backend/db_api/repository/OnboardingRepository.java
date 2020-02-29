@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface OnboardingRepository extends PagingAndSortingRepository<Onboarding, String> {
 
     Optional<Onboarding> findByType(OnboardingType onboardingType);
+
+    boolean existsByType(OnboardingType type);
 }

@@ -1,5 +1,6 @@
 package com.wrf.backend.db_api;
 
+import com.wrf.backend.db_api.repository.UserRepository;
 import com.wrf.backend.entity.User;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.response.RoleDTO;
@@ -24,21 +25,15 @@ public class UserDbApi extends DbApi {
     private static final String PHONE_PROPERTY_NAME = "phone";
     private static final String PASSWORD_PROPERTY_NAME = "password";
 
-    public UserDbApi(HibernateTemplate hibernateTemplate) {
+    private final UserRepository userRepository;
+
+    public UserDbApi(HibernateTemplate hibernateTemplate, UserRepository userRepository) {
         super(hibernateTemplate);
+        this.userRepository = userRepository;
     }
 
-    public User getUser(final String phone, final String password) throws NoSuchAlgorithmException {
-        final String passwordHash = PasswordUtils.getPasswordHash(password);
-        final var criteria = DetachedCriteria.forClass(User.class);
-        criteria.add(Restrictions.eq(PHONE_PROPERTY_NAME, phone));
-        criteria.add(Restrictions.eq(PASSWORD_PROPERTY_NAME, passwordHash));
-        return (User) findFirst(criteria);
-    }
-
-    public User findUser(final String id) {
-        final var user = hibernateTemplate.get(User.class, id);
-        return Optional.ofNullable(user)
+    public User findById(final String id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
     }
 

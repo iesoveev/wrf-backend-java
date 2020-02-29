@@ -36,9 +36,6 @@ public class User extends BaseEntity {
     @Description("ФИО")
     private String fullName;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "members")
-    private List<WorkShift> workShifts;
-
     @Column(name = "last_login_time")
     private Date lastLoginTime;
 

@@ -37,6 +37,7 @@ public class OnboardingService {
     public GeneralImageIdModel addOnboarding(final OnboardingModel model) {
         var type = OnboardingType.valueOf(model.getType());
         onboardingDbApi.checkOnboardingExist(type);
+
         var onboarding = new Onboarding();
         onboarding.setType(type);
         onboarding.setTitle(model.getTitle());
@@ -49,7 +50,7 @@ public class OnboardingService {
         imageService.saveImage(model.getImage(),
                 appConfig.getOnboardingImagePath() + imageUuid, imageUuid);
 
-        onboardingDbApi.saveOnboarding(onboarding);
+        onboardingRepository.save(onboarding);
         return new GeneralImageIdModel(imageUuid);
     }
 
@@ -78,7 +79,7 @@ public class OnboardingService {
                 imageService.replaceImage(targetImageUuid, onboarding.getImageUuid(),
                         model.getImage(), appConfig.getOnboardingImagePath()));
 
-        onboardingDbApi.updateOnboarding(onboarding);
+        onboardingRepository.save(onboarding);
     }
 
     public void checkImageState(final String imageUuid) {

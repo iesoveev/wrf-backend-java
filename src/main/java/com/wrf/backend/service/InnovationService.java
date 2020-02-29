@@ -2,6 +2,7 @@ package com.wrf.backend.service;
 
 import com.wrf.backend.config.AppConfig;
 import com.wrf.backend.db_api.InnovationDbApi;
+import com.wrf.backend.db_api.repository.InnovationRepository;
 import com.wrf.backend.entity.Innovation;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.exception.ErrorMessage;
@@ -31,7 +32,8 @@ public class InnovationService {
 
     final AppConfig appConfig;
 
-    @Transactional
+    final InnovationRepository innovationRepository;
+
     public InnovationDTO addInnovation(final UserInnovationRequest request) {
         var innovation = new Innovation(
                 request.getText(),
@@ -39,8 +41,8 @@ public class InnovationService {
                 authService.getUserInfo().getId()
         );
 
-        var innovationId = (String) hibernateTemplate.save(innovation);
-        return new InnovationDTO(innovationId);
+        return new InnovationDTO(innovationRepository.save(innovation).getId());
+
     }
 
     public List<CategoryDTO> getAllCategories() {
@@ -48,12 +50,12 @@ public class InnovationService {
     }
 
     public void saveImageByInnovationId(final ImageRequestModel model) {
-        var innovation = Optional.ofNullable(hibernateTemplate.get(Innovation.class, model.getId()))
+        var innovation = innovationRepository.findById(model.getId())
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INNOVATION_IS_NOT_FOUND));
 
         String imageUuid = UUID.randomUUID().toString();
         imageService.saveImage(model.getImage(), appConfig.getInnovationImagePath() + imageUuid, imageUuid);
         innovation.setImageUuid(imageUuid);
-        hibernateTemplate.saveOrUpdate(innovation);
+        innovationRepository.save(innovation);
     }
 }

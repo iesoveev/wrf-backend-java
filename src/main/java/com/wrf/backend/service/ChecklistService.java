@@ -5,6 +5,7 @@ import com.wrf.backend.db_api.UserDbApi;
 import com.wrf.backend.db_api.repository.ChecklistCategoryRepository;
 import com.wrf.backend.db_api.repository.ChecklistItemRepository;
 import com.wrf.backend.db_api.repository.RoleRepository;
+import com.wrf.backend.entity.ChecklistCategory;
 import com.wrf.backend.entity.ChecklistItem;
 import com.wrf.backend.mapper.ChecklistCategoryMapper;
 import com.wrf.backend.mapper.ChecklistMapper;

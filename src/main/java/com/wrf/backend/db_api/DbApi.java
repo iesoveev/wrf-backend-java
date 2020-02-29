@@ -39,7 +39,7 @@ public abstract class DbApi {
     }
 
     protected static DetachedCriteria createCriteria(Class<? extends BaseEntity> clazz,
-                                                     Class<? extends BaseDTO> transformerClass, final ProjectionList projections) {
+                                                     Class transformerClass, final ProjectionList projections) {
         final var criteria = DetachedCriteria.forClass(clazz);
         criteria.setProjection(projections);
         criteria.setResultTransformer(Transformers.aliasToBean(transformerClass));

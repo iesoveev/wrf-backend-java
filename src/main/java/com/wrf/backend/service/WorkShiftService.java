@@ -2,8 +2,13 @@ package com.wrf.backend.service;
 
 import com.wrf.backend.db_api.UserDbApi;
 import com.wrf.backend.db_api.WorkShiftDbApi;
+import com.wrf.backend.db_api.repository.EventRepository;
+import com.wrf.backend.db_api.repository.UserRepository;
+import com.wrf.backend.db_api.repository.WSRepository;
 import com.wrf.backend.entity.*;
 import com.wrf.backend.exception.BusinessException;
+import com.wrf.backend.exception.ErrorMessage;
+import com.wrf.backend.mapper.EventMapper;
 import com.wrf.backend.model.request.*;
 import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
@@ -13,6 +18,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
 import static com.wrf.backend.utils.DateUtils.*;
@@ -31,7 +37,12 @@ public class WorkShiftService {
 
     final AsyncService asyncService;
 
-    @Transactional
+    final WSRepository wsRepository;
+
+    final EventRepository eventRepository;
+
+    final UserRepository userRepository;
+
     public GeneralIdDTO openWS(final ShiftRequestModel model) {
         final List<User> members = userDbApi.findUsers(model.getMemberIds());
         final var ws = new WorkShift();
@@ -39,52 +50,49 @@ public class WorkShiftService {
         ws.setOpen_at(new Date());
         ws.setUserOpenedId(authService.getUserInfo().getId());
 
-        var id = (String) hibernateTemplate.save(ws);
-
-        return new GeneralIdDTO(id);
+        return new GeneralIdDTO(wsRepository.save(ws).getId());
     }
 
-    @Transactional
     public void addMember(final AddMemberToWSModel model) {
-        final var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
-        final var user = userDbApi.findUser(model.getUserId());
+        final var workShift = workShiftDbApi.findById(model.getShiftId());
+        final var user = userDbApi.findById(model.getUserId());
 
         if (workShift.getMembers().contains(user))
             throw new BusinessException(USER_IS_ALREADY_ON_THE_SHIFT);
 
-        // members не может быть null
         workShift.getMembers().add(user);
 
-        hibernateTemplate.update(workShift);
+        wsRepository.save(workShift);
     }
 
-    @Transactional
     public void replaceMember(final ReplaceMemberModel model) {
-        final var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
-        final var targetUser = userDbApi.findUser(model.getTargetUserId());
-        final var newUser = userDbApi.findUser(model.getNewUserId());
+        final var workShift = workShiftDbApi.findById(model.getShiftId());
+        final var targetUser = userDbApi.findById(model.getTargetUserId());
+        final var newUser = userDbApi.findById(model.getNewUserId());
         workShift.getMembers().remove(targetUser);
         workShift.getMembers().add(newUser);
 
-        hibernateTemplate.update(workShift);
+        wsRepository.save(workShift);
     }
 
     @Transactional
     public void addEvent(final EventModel model) {
-        final var workShift = workShiftDbApi.findWorkShift(model.getShiftId());
+        final var workShift = wsRepository.findById(model.getShiftId())
+                .orElseThrow(() -> new BusinessException(SHIFT_IS_NOT_FOUND));
 
         final var event = new Event();
         event.setText(model.getText());
         event.setWorkShift(workShift);
         event.setWorkShiftId(workShift.getId());
-        final var user = userDbApi.findUser(authService.getUserInfo().getId());
+        final var user = userRepository.findById(authService.getUserInfo().getId())
+                .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
         event.setUser(user);
         event.setUserId(user.getId());
-        hibernateTemplate.save(event);
+        eventRepository.save(event);
 
         workShift.getEvents().add(event);
 
-        hibernateTemplate.update(workShift);
+        wsRepository.save(workShift);
 
 //        List<String> receivers = workShift.getMembers().stream()
 //                .map(User::getDeviceToken)
@@ -94,37 +102,32 @@ public class WorkShiftService {
 //        asyncService.sendNotify(receivers, event.getText());
     }
 
-    @Transactional
     public List<EventDTO> getEvents(@Nullable final String shiftId) {
-        final var events = workShiftDbApi.findEvents(shiftId);
-        events.forEach( event -> {
-            event.setCreatedTime(dateTimeFormatter.format(event.getCreatedDateTime()));
-            event.setCreatedDateTime(null);
-        });
-        return events;
+        return workShiftDbApi
+                .findEvents(shiftId)
+                .stream()
+                .map(EventMapper.INSTANCE::map)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    @Transactional
     public void closeWS(final GeneralIdModel model) {
-        final var workShift = workShiftDbApi.findWorkShift(model.getId());
+        final var workShift = workShiftDbApi.findById(model.getId());
 
         if (workShift.getClose_at() != null)
             throw new BusinessException(SHIFT_IS_ALREADY_CLOSED);
 
         workShift.setClose_at(new Date());
         workShift.setUserClosedId(authService.getUserInfo().getId());
-        hibernateTemplate.update(workShift);
+        wsRepository.save(workShift);
     }
 
-    @Transactional(readOnly = true)
     public List<EventDTO> search(final String text,
                                  final Integer limit,
                                  final Integer offset) {
-        final var events = workShiftDbApi.findEventsByText(text, limit, offset);
-        events.forEach( event -> {
-            event.setCreatedTime(dateTimeFormatter.format(event.getCreatedDateTime()));
-            event.setCreatedDateTime(null);
-        });
-        return events;
+        return workShiftDbApi
+                .findEventsByText(text, limit, offset)
+                .stream()
+                .map(EventMapper.INSTANCE::map)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
