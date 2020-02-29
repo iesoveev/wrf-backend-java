@@ -57,7 +57,7 @@ public class ChecklistController {
         return checklistService.findChecklistCategories(user_id, role_id, category_id);
     }
 
-    @ApiOperation(value = "Получение чек-листов для пользователя")
+    @ApiOperation(value = "Обновление статуса таски чек-листа")
     @PostMapping("/{item_id}/update")
     public Response updateChecklistStatus(@PathVariable String item_id,
                                          @RequestBody ChecklistStatusModel model) {
@@ -65,7 +65,7 @@ public class ChecklistController {
         return new Response();
     }
 
-    @ApiOperation(value = "Получение чек-листов для пользователя")
+    @ApiOperation(value = "Обновление статуса тасок чек-листа (пачкой)")
     @PostMapping("/update")
     public Response updatePackChecklistStatus(@RequestBody ChecklistPackItemStatusModel model)
             throws IllegalAccessException {
