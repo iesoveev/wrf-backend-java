@@ -48,8 +48,11 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
+    @Column(name ="access_token")
+    private String accessToken;
+
     public User(String name, String surname,
-                String phone, String password, String deviceToken) {
+                String phone, String password, String deviceToken, String accessToken) {
         this.name = name;
         this.surname = surname;
         this.fullName = name + " " + surname;
@@ -57,6 +60,7 @@ public class User extends BaseEntity {
         this.password = password;
         this.lastLoginTime = new Date();
         this.deviceToken = deviceToken;
+        this.accessToken = accessToken;
     }
 
     public User(String name) {

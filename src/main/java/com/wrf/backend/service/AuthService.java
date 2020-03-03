@@ -36,15 +36,11 @@ public class AuthService {
 
     private final UserDbApi userDbApi;
 
-    private final HibernateTemplate hibernateTemplate;
-
     private final UserRepository userRepository;
 
     public void checkAccessToken(final String token) {
-        final var userToken = accessTokenMap.get(token);
-        Optional.ofNullable(userToken)
+        final var user = userRepository.findByAccessToken(token)
                 .orElseThrow(UnauthorizedException::new);
-        final var user = userDbApi.getUserByPhone(userToken.getPhone());
         userInfo = new UserInfo(user.getPhone(), user.getId());
     }
 
@@ -55,28 +51,32 @@ public class AuthService {
                 .orElseThrow(() -> new BusinessException(INVALID_LOGIN_DATA));
 
         user.setLastLoginTime(new Date());
+
+        var accessToken = UUID.randomUUID().toString();
+        user.setAccessToken(accessToken);
         userRepository.save(user);
-        return createToken(model.getPhone());
+        return new TokenDTO(accessToken);
     }
 
     public TokenDTO addUser(final UserRegistrationModel model,
                             final String deviceToken) throws NoSuchAlgorithmException {
         userDbApi.checkUserExist(model.getPhone());
         final String passwordHash = PasswordUtils.getPasswordHash(model.getPassword());
+        var accessToken = UUID.randomUUID().toString();
         userRepository.save(new User(model.getName(), model.getSurname(),
-                model.getPhone(), passwordHash, deviceToken));
-        return createToken(model.getPhone());
+                model.getPhone(), passwordHash, deviceToken, accessToken));
+        return new TokenDTO(accessToken);
     }
 
-    private TokenDTO createToken(final String phone) {
+    private TokenDTO createToken(final User user) {
         var accessToken = UUID.randomUUID().toString();
-        accessTokenMap
-                .entrySet()
-                .stream()
-                .filter(el -> el.getValue().getPhone().equals(phone))
-                .forEach(el -> accessTokenMap.remove(el.getKey()));
+//        accessTokenMap
+//                .entrySet()
+//                .stream()
+//                .filter(el -> el.getValue().getPhone().equals(phone))
+//                .forEach(el -> accessTokenMap.remove(el.getKey()));
 
-        accessTokenMap.put(accessToken, new UserToken(phone, accessToken));
+//        accessTokenMap.put(accessToken, new UserToken(phone, accessToken));
         return new TokenDTO(accessToken);
     }
 
