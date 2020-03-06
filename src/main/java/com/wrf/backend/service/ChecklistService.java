@@ -5,25 +5,22 @@ import com.wrf.backend.db_api.UserDbApi;
 import com.wrf.backend.db_api.repository.ChecklistCategoryRepository;
 import com.wrf.backend.db_api.repository.ChecklistItemRepository;
 import com.wrf.backend.db_api.repository.RoleRepository;
-import com.wrf.backend.entity.ChecklistCategory;
 import com.wrf.backend.entity.ChecklistItem;
 import com.wrf.backend.mapper.ChecklistCategoryMapper;
 import com.wrf.backend.mapper.ChecklistMapper;
 import com.wrf.backend.mapper.RoleMapper;
-import com.wrf.backend.model.request.ChecklistItemStatusModel;
 import com.wrf.backend.model.request.ChecklistPackItemStatusModel;
 import com.wrf.backend.model.request.ChecklistStatusModel;
 import com.wrf.backend.model.response.ChecklistCategoryDTO;
 import com.wrf.backend.model.response.ChecklistItemDTO;
 import com.wrf.backend.model.response.RoleDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +43,12 @@ public class ChecklistService {
         return roleDTOs;
     }
 
-    public List<ChecklistCategoryDTO> findAllCategories() {
-        var checklistCategories = checklistCategoryRepository.findAll();
-        List<ChecklistCategoryDTO> checklistCategoryDTOs = new ArrayList<>();
-        checklistCategories.forEach(category ->
-            checklistCategoryDTOs.add(ChecklistCategoryMapper.INSTANCE.map(category)));
-        return checklistCategoryDTOs;
+    public List<ChecklistCategoryDTO> findCategoriesByRole(final String roleId) {
+        return checklistCategoryRepository
+                .findByRoleId(roleId)
+                .stream()
+                .map(ChecklistCategoryMapper.INSTANCE::map)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public List<ChecklistItemDTO> findChecklists(final String roleId, final String categoryId) {

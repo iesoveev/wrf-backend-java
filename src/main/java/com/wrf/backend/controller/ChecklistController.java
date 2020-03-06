@@ -31,9 +31,9 @@ public class ChecklistController {
     }
 
     @ApiOperation(value = "Получение категорий чек-листов")
-    @GetMapping("/categories")
-    public List<ChecklistCategoryDTO> findAllCategories() {
-        return checklistService.findAllCategories();
+    @GetMapping("/categories/{role_id}")
+    public List<ChecklistCategoryDTO> findAllCategories(@PathVariable String role_id) {
+        return checklistService.findCategoriesByRole(role_id);
     }
 
     @ApiOperation(value = "Получение чек-листов")
