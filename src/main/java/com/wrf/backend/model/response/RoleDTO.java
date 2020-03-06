@@ -5,7 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RoleDTO extends BaseDTO {
+public class RoleDTO {
+
+    private String id;
 
     private String name;
 }
