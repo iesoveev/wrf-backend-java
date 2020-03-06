@@ -56,8 +56,7 @@ public class OnboardingService {
 
     @Cacheable(cacheNames = "onboardingCache", key = "#type")
     public OnboardingDTO findOnboarding(@Nullable final String type) {
-        Onboarding onboarding = onboardingRepository.findByType(OnboardingType.valueOf(type))
-                .orElseThrow(() -> new BusinessException(ONBOARDING_IS_NOT_FOUND));
+        Onboarding onboarding = onboardingDbApi.findByType(type);
         return OnboardingMapper.INSTANCE.map(onboarding);
     }
 
@@ -67,8 +66,7 @@ public class OnboardingService {
 
     @CacheEvict(cacheNames = "onboardingCache", key = "#model.type")
     public void updateOnboarding(final OnboardingUpdateModel model) {
-        var onboarding = onboardingRepository.findByType(OnboardingType.valueOf(model.getType()))
-                .orElseThrow(() -> new BusinessException(ONBOARDING_IS_NOT_FOUND));
+        Onboarding onboarding = onboardingDbApi.findByType(model.getType());
         String targetImageUuid = onboarding.getImageUuid();
         onboarding.setTextIfPresent(model.getText());
         onboarding.setTitleIfPresent(model.getTitle());
