@@ -16,7 +16,7 @@ public class ServletExceptionHandler {
 
     @ExceptionHandler(ServletException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Response handleBusinessException(ServletException ex) {
+    public Response handleServletException(ServletException ex) {
         log.warn(ex);
         return new Response(ex.getLocalizedMessage());
     }

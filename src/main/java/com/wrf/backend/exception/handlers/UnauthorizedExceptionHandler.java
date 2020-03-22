@@ -17,7 +17,7 @@ public class UnauthorizedExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public Response handleBusinessException(UnauthorizedException ex) {
+    public Response handleUnauthorizedException(UnauthorizedException ex) {
         log.warn(ex);
         return new Response(ErrorMessage.NO_AUTHORIZATION);
     }
