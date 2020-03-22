@@ -1,17 +1,20 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
 
 @Getter
-public class AddMemberToWSModel {
+@RequiredArgsConstructor
+public final class AddMemberToWSModel {
 
+    @NotBlank
     @ApiModelProperty(value = "userId", required = true)
-    @JsonProperty(value = "userId")
-    private String userId;
+    private final String userId;
 
+    @NotBlank
     @ApiModelProperty(value = "shiftId", required = true)
-    @JsonProperty(value = "shiftId")
-    private String shiftId;
+    private final String shiftId;
 }

@@ -7,11 +7,11 @@ import com.wrf.backend.model.response.ChecklistItemDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.model.response.RoleDTO;
 import com.wrf.backend.service.ChecklistService;
-import com.wrf.backend.utils.ValidationUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -60,16 +60,14 @@ public class ChecklistController {
     @ApiOperation(value = "Обновление статуса таски чек-листа")
     @PostMapping("/{item_id}/update")
     public Response updateChecklistStatus(@PathVariable String item_id,
-                                         @RequestBody ChecklistStatusModel model) {
+                                         @Valid @RequestBody ChecklistStatusModel model) {
         checklistService.updateChecklistItemStatus(item_id, model);
         return new Response();
     }
 
     @ApiOperation(value = "Обновление статуса тасок чек-листа (пачкой)")
     @PostMapping("/update")
-    public Response updatePackChecklistStatus(@RequestBody ChecklistPackItemStatusModel model)
-            throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response updatePackChecklistStatus(@Valid @RequestBody ChecklistPackItemStatusModel model) {
         checklistService.updatePackChecklistStatus(model);
         return new Response();
     }

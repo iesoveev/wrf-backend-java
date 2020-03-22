@@ -1,26 +1,19 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import javax.validation.constraints.NotBlank;
 
 @Getter
-public class UserInnovationRequest {
+@RequiredArgsConstructor
+public final class UserInnovationRequest {
 
-    @JsonProperty(value = "categoryId")
+    @NotBlank
     @ApiModelProperty(required = true, value = "Идентификатор категории")
-    private String categoryId;
+    private final String categoryId;
 
-    @JsonProperty(value = "text")
+    @NotBlank
     @ApiModelProperty(required = true, value = "Текст инновации")
-    private String text;
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
+    private final String text;
 }

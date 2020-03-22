@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/onboarding", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -39,7 +41,7 @@ public class OnboardingController {
 
     @ApiOperation(value = "Обновление онбоардинга")
     @PostMapping("/update")
-    public Response updateOnboarding(@RequestBody OnboardingUpdateModel model) {
+    public Response updateOnboarding(@Valid @RequestBody OnboardingUpdateModel model) {
         onboardingService.updateOnboarding(model);
         return new Response();
     }

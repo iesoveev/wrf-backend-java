@@ -6,15 +6,11 @@ import com.wrf.backend.model.request.ImageRequestModel;
 import com.wrf.backend.model.request.UserInnovationRequest;
 import com.wrf.backend.model.response.InnovationDTO;
 import com.wrf.backend.service.InnovationService;
-import com.wrf.backend.utils.ValidationUtils;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/innovations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -22,15 +18,13 @@ public class InnovationController {
 
     private final InnovationService innovationService;
 
-    @Autowired
     public InnovationController(InnovationService innovationService) {
         this.innovationService = innovationService;
     }
 
     @ApiOperation(value = "Добавить инновацию")
     @PostMapping
-    public InnovationDTO addInnovation(@RequestBody UserInnovationRequest innovationRequest) throws IllegalAccessException {
-        ValidationUtils.validate(innovationRequest);
+    public InnovationDTO addInnovation(@Valid @RequestBody UserInnovationRequest innovationRequest) {
         return innovationService.addInnovation(innovationRequest);
     }
 
@@ -42,8 +36,7 @@ public class InnovationController {
 
     @ApiOperation(value = "Добавить фото к инновации")
     @PostMapping("/images")
-    public Response saveImage(@RequestBody ImageRequestModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response saveImage(@Valid @RequestBody ImageRequestModel model) {
         innovationService.saveImageByInnovationId(model);
         return new Response();
     }

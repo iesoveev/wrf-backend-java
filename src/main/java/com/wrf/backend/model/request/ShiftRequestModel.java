@@ -1,15 +1,14 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Getter
 public class ShiftRequestModel {
 
+    @NotEmpty
     @ApiModelProperty(value = "Идентификаторы участников команды", required = true)
-    @JsonProperty("memberIds")
     private List<String> memberIds;
 }

@@ -5,7 +5,6 @@ import com.wrf.backend.model.request.GeneralPeriodModel;
 import com.wrf.backend.model.response.AndroidLogDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.LogService;
-import com.wrf.backend.utils.ValidationUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -24,16 +23,14 @@ public class LogController {
 
     @ApiOperation(value = "Сохранение лога для андроида")
     @PutMapping("/push")
-    public Response pushLog(@RequestBody AndroidLogModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response pushLog(@RequestBody AndroidLogModel model) {
         logService.pushLog(model.getMessage());
         return new Response();
     }
 
     @ApiOperation(value = "Получение логов по периоду")
     @GetMapping("/find")
-    public List<AndroidLogDTO> findLog(@RequestBody GeneralPeriodModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public List<AndroidLogDTO> findLog(@RequestBody GeneralPeriodModel model) {
         return logService.findLog(model);
     }
 }

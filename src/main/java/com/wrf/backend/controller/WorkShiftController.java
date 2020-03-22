@@ -5,11 +5,11 @@ import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.WorkShiftService;
-import com.wrf.backend.utils.ValidationUtils;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,47 +18,40 @@ public class WorkShiftController {
 
     private final WorkShiftService workShiftService;
 
-    @Autowired
     public WorkShiftController(WorkShiftService workShiftService) {
         this.workShiftService = workShiftService;
     }
 
-
     @ApiOperation(value = "Открытие смены")
     @PutMapping("/open")
-    public GeneralIdDTO openWS(@RequestBody ShiftRequestModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public GeneralIdDTO openWS(@Valid @RequestBody ShiftRequestModel model) {
         return workShiftService.openWS(model);
     }
 
     @ApiOperation(value = "Добавление пользователя в смену")
     @PostMapping("/members")
-    public Response addMember(@RequestBody AddMemberToWSModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response addMember(@Valid @RequestBody AddMemberToWSModel model) {
         workShiftService.addMember(model);
         return new Response();
     }
 
     @ApiOperation(value = "Замена члена команды")
     @PostMapping("/replace")
-    public Response replaceMember(@RequestBody ReplaceMemberModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response replaceMember(@Valid @RequestBody ReplaceMemberModel model) {
         workShiftService.replaceMember(model);
         return new Response();
     }
 
     @ApiOperation(value = "Закрытие смены")
     @PostMapping("/close")
-    public Response closeWS(@RequestBody GeneralIdModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response closeWS(@Valid @RequestBody GeneralIdModel model) {
         workShiftService.closeWS(model);
         return new Response();
     }
 
     @ApiOperation(value = "Добавление события в смену")
     @PutMapping("/event")
-    public Response addEvent(@RequestBody EventModel model) throws IllegalAccessException {
-        ValidationUtils.validate(model);
+    public Response addEvent(@Valid @RequestBody EventModel model) {
         workShiftService.addEvent(model);
         return new Response();
     }

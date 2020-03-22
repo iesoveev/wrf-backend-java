@@ -1,17 +1,16 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-public class ImageRequestModel {
+@RequiredArgsConstructor
+public final class ImageRequestModel {
 
     @ApiModelProperty(value = "Картинка", required = true)
-    @JsonProperty(value = "image")
-    private String image;
+    private final String image;
 
     @ApiModelProperty(value = "Идентификатор инновации", required = true)
-    @JsonProperty(value = "id")
-    private String id;
+    private final String id;
 }

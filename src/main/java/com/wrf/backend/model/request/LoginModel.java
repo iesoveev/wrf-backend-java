@@ -1,19 +1,20 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Getter
-@Setter
-public class LoginModel {
+@RequiredArgsConstructor
+public final class LoginModel {
 
+    @Pattern(regexp = "^((7)([0-9]{10}))$", message = "Неверный формат телефона")
     @ApiModelProperty(required = true, value = "Телефон")
-    @JsonProperty(value = "phone")
-    private String phone;
+    private final String phone;
 
+    @NotBlank
     @ApiModelProperty(required = true, value = "Пароль")
-    @JsonProperty(value = "password")
-    private String password;
+    private final String password;
 }

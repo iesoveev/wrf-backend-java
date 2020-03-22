@@ -1,22 +1,25 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
 
 @Getter
-public class ReplaceMemberModel {
+@RequiredArgsConstructor
+public final class ReplaceMemberModel {
 
+    @NotBlank
     @ApiModelProperty(value = "Идентификатор пользователя", required = true)
-    @JsonProperty(value = "targetUserId")
-    private String targetUserId;
+    private final String targetUserId;
 
+    @NotBlank
     @ApiModelProperty(value = "Идентификатор польщователя", required = true)
-    @JsonProperty(value = "newUserId")
-    private String newUserId;
+    private final String newUserId;
 
+    @NotBlank
     @ApiModelProperty(value = "shiftId", required = true)
-    @JsonProperty(value = "shiftId")
-    private String shiftId;
+    private final String shiftId;
 }
 

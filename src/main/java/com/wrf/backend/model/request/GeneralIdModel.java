@@ -1,17 +1,14 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import javax.validation.constraints.NotBlank;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class GeneralIdModel {
 
+    @NotBlank
     @ApiModelProperty(value = "Идентификатор", required = true)
-    @JsonProperty(value = "id")
     private String id;
 }
