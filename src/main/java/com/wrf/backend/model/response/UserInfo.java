@@ -9,5 +9,5 @@ public final class UserInfo {
 
     private final String phone;
 
-    private final String id;
+    private final Long id;
 }

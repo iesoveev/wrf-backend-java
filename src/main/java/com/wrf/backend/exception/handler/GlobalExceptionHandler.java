@@ -21,13 +21,6 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LogManager.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(value = HttpStatus.OK)
-    public Response handleBusinessException(BusinessException ex) {
-        log.warn(ex);
-        return new Response(ex.getMessage());
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex) {

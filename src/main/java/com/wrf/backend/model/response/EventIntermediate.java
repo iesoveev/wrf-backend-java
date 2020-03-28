@@ -9,7 +9,7 @@ import java.util.Date;
 @Setter
 public class EventIntermediate {
 
-    private String id;
+    private Long id;
 
     private Date create_at;
 

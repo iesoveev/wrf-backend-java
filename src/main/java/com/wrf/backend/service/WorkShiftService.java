@@ -102,7 +102,7 @@ public class WorkShiftService {
 //        asyncService.sendNotify(receivers, event.getText());
     }
 
-    public List<EventDTO> getEvents(@Nullable final String shiftId) {
+    public List<EventDTO> getEvents(@Nullable final Long shiftId) {
         return workShiftDbApi
                 .findEvents(shiftId)
                 .stream()

@@ -5,26 +5,21 @@ import com.wrf.backend.model.request.UserRegistrationModel;
 import com.wrf.backend.model.response.TokenDTO;
 import com.wrf.backend.service.AuthService;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-@CrossOrigin
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
     @ApiOperation(value = "Регистрация")
-    @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TokenDTO addUser(@Valid @RequestBody UserRegistrationModel model,
                             @RequestHeader String deviceToken) throws NoSuchAlgorithmException {
         // todo придумать что делать, если токен будет не валидным и как его проверить

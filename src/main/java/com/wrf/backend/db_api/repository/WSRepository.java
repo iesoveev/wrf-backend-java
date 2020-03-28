@@ -5,6 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WSRepository extends PagingAndSortingRepository<WorkShift, String> {
+public interface WSRepository extends PagingAndSortingRepository<WorkShift, Long> {
 
 }

@@ -2,12 +2,13 @@ package com.wrf.backend.model.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @Getter
-@RequiredArgsConstructor
-public final class TokenDTO implements Serializable {
+@Setter
+public class TokenDTO {
 
-    private final String accessToken;
+    private String accessToken;
 }

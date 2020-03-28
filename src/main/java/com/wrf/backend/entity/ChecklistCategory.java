@@ -15,5 +15,5 @@ public class ChecklistCategory extends BaseEntity {
     private Role role;
 
     @Column(name = "role_id")
-    private String roleId;
+    private Long roleId;
 }

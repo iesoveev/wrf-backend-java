@@ -5,12 +5,13 @@ import com.wrf.backend.entity.Onboarding;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OnboardingRepository extends PagingAndSortingRepository<Onboarding, String> {
+public interface OnboardingRepository extends PagingAndSortingRepository<Onboarding, Long> {
 
-    Optional<Onboarding> findByType(OnboardingType onboardingType);
+    List<Onboarding> findByType(OnboardingType onboardingType);
 
     boolean existsByType(OnboardingType type);
 }

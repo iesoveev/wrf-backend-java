@@ -1,20 +1,24 @@
 package com.wrf.backend.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
-@RequiredArgsConstructor
-public final class EventModel {
+@AllArgsConstructor
+@NoArgsConstructor
+public class EventModel {
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "Идентификатор смены", required = true)
-    private final String shiftId;
+    private Long shiftId;
 
     @NotBlank
     @ApiModelProperty(value = "Текст события", required = true)
-    private final String text;
+    private String text;
 }

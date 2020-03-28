@@ -22,9 +22,6 @@ import static com.wrf.backend.exception.ErrorMessage.USER_IS_NOT_FOUND;
 @Repository
 public class UserDbApi extends DbApi {
 
-    private static final String PHONE_PROPERTY_NAME = "phone";
-    private static final String PASSWORD_PROPERTY_NAME = "password";
-
     private final UserRepository userRepository;
 
     public UserDbApi(HibernateTemplate hibernateTemplate, UserRepository userRepository) {
@@ -32,15 +29,8 @@ public class UserDbApi extends DbApi {
         this.userRepository = userRepository;
     }
 
-    public User findById(final String id) {
+    public User findById(final Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
-    }
-
-    public User getUserByPhone(final String phone) {
-        final var user = (User) findFirst(DetachedCriteria.forClass(User.class)
-                .add(Restrictions.eq(PHONE_PROPERTY_NAME, phone)));
-        return Optional.ofNullable(user)
                 .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
     }
 
@@ -55,13 +45,13 @@ public class UserDbApi extends DbApi {
             throw new BusinessException(MessageFormat.format(USER_IS_ALREADY_REGISTERED.getMessage(), phone));
     }
 
-    public List<User> findUsers(final List<String> ids) {
+    public List<User> findUsers(final List<Long> ids) {
         final var criteria = DetachedCriteria.forClass(User.class)
                 .add(Restrictions.in("id", ids));
         return (List<User>) hibernateTemplate.findByCriteria(criteria);
     }
 
-    public List<RoleDTO> findRolesByUser(final String userId) {
+    public List<RoleDTO> findRolesByUser(final Long userId) {
         final var criteria = DetachedCriteria.forClass(User.class);
         criteria.createAlias("roles", "role", JoinType.LEFT_OUTER_JOIN);
 

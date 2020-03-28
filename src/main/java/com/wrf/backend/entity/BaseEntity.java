@@ -3,10 +3,7 @@ package com.wrf.backend.entity;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,9 +17,8 @@ public abstract class BaseEntity implements Serializable {
 
     @Id
     @Column(length = 36)
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "create_at")
     private Date create_at;

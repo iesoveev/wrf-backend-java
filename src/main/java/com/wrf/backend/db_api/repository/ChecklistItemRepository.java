@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ChecklistItemRepository extends PagingAndSortingRepository<ChecklistItem, String> {
+public interface ChecklistItemRepository extends PagingAndSortingRepository<ChecklistItem, Long> {
 
-    List<ChecklistItem> findByRoleIdAndCategoryId(String roleId, String categoryId);
+    List<ChecklistItem> findByRoleIdAndCategoryId(Long roleId, Long categoryId);
 
-    List<ChecklistItem> findByUserIdAndRoleIdAndCategoryId(String userId, String roleId, String categoryId);
+    List<ChecklistItem> findByUserIdAndRoleIdAndCategoryId(Long userId, Long roleId, Long categoryId);
 
     @Modifying
     @Query("update ChecklistItem set status = ?1 where id = ?2")
-    void updateChecklistItemStatus(ChecklistItemStatus status, String itemId);
+    void updateChecklistItemStatus(ChecklistItemStatus status, Long itemId);
 }

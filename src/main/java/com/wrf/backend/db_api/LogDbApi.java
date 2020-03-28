@@ -17,11 +17,11 @@ public class LogDbApi extends DbApi {
         super(hibernateTemplate);
     }
 
-    public List<AndroidLog> getAndroidLog(GeneralPeriodModel model) {
+    public List<AndroidLog> getAndroidLog(final String beginDate, final String endDate) {
         final var criteria = DetachedCriteria.forClass(AndroidLog.class);
-        final var beginDate = DateUtils.parse(model.getBeginDate());
-        final var endDate = DateUtils.parse(model.getEndDate());
-        criteria.add(Restrictions.between("createdTime", beginDate, endDate));
+        final var begin = DateUtils.parse(beginDate);
+        final var end = DateUtils.parse(endDate);
+        criteria.add(Restrictions.between("create_at", begin, end));
         return (List<AndroidLog>) find(criteria);
     }
 }

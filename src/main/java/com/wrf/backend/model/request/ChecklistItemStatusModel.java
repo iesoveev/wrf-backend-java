@@ -7,7 +7,7 @@ import lombok.Getter;
 public class ChecklistItemStatusModel {
 
     @ApiModelProperty(value = "Идентификатор таски чек-листа", required = true)
-    private String itemId;
+    private Long itemId;
 
     @ApiModelProperty(value = "Статус", required = true)
     private String status;

@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class GeneralIdDTO {
 
-    private final String id;
+    private final Long id;
 }

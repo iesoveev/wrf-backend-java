@@ -1,20 +1,21 @@
 package com.wrf.backend.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotNull;
 
 @Getter
-@RequiredArgsConstructor
-public final class AddMemberToWSModel {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AddMemberToWSModel {
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "userId", required = true)
-    private final String userId;
+    private Long userId;
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "shiftId", required = true)
-    private final String shiftId;
+    private Long shiftId;
 }

@@ -1,29 +1,29 @@
 package com.wrf.backend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
+import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@RequiredArgsConstructor
-public final class OnboardingModel {
+@AllArgsConstructor
+@NoArgsConstructor
+public class OnboardingModel {
 
     @NotBlank
     @ApiModelProperty(required = true, value = "Тип онбоардинга")
-    private final String type;
+    private String type;
 
     @NotBlank
     @ApiModelProperty(required = true, value = "Заголовок")
-    private final String title;
+    private String title;
 
     @NotBlank
     @ApiModelProperty(required = true, value = "Текст")
-    private final String text;
+    private String text;
 
     @NotBlank
-    @ApiModelProperty(required = true, value = "Картинка")
-    private final String image;
+    @ApiModelProperty(required = true, value = "Картинка (Base64)")
+    private String image;
 }

@@ -52,7 +52,9 @@ public class AuthService {
         var accessToken = UUID.randomUUID().toString();
         user.setAccessToken(accessToken);
         userRepository.save(user);
-        return new TokenDTO(accessToken);
+        TokenDTO dto = new TokenDTO();
+        dto.setAccessToken(accessToken);
+        return dto;
     }
 
     public TokenDTO addUser(final UserRegistrationModel model,
@@ -62,7 +64,9 @@ public class AuthService {
         var accessToken = UUID.randomUUID().toString();
         userRepository.save(new User(model.getName(), model.getSurname(),
                 model.getPhone(), passwordHash, deviceToken, accessToken));
-        return new TokenDTO(accessToken);
+        TokenDTO dto = new TokenDTO();
+        dto.setAccessToken(accessToken);
+        return dto;
     }
 
     private TokenDTO createToken(final User user) {
@@ -74,7 +78,9 @@ public class AuthService {
 //                .forEach(el -> accessTokenMap.remove(el.getKey()));
 
 //        accessTokenMap.put(accessToken, new UserToken(phone, accessToken));
-        return new TokenDTO(accessToken);
+        TokenDTO dto = new TokenDTO();
+        dto.setAccessToken(accessToken);
+        return dto;
     }
 
     public UserInfo getUserInfo() {

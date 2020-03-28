@@ -5,21 +5,22 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @RequiredArgsConstructor
 public final class ReplaceMemberModel {
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "Идентификатор пользователя", required = true)
-    private final String targetUserId;
+    private final Long targetUserId;
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "Идентификатор польщователя", required = true)
-    private final String newUserId;
+    private final Long newUserId;
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "shiftId", required = true)
-    private final String shiftId;
+    private final Long shiftId;
 }
 

@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class InnovationDTO {
 
-    private final String innovationId;
+    private final Long innovationId;
 }

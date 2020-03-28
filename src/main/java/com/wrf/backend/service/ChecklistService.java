@@ -43,7 +43,7 @@ public class ChecklistService {
         return roleDTOs;
     }
 
-    public List<ChecklistCategoryDTO> findCategoriesByRole(final String roleId) {
+    public List<ChecklistCategoryDTO> findCategoriesByRole(final Long roleId) {
         return checklistCategoryRepository
                 .findByRoleId(roleId)
                 .stream()
@@ -51,7 +51,7 @@ public class ChecklistService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<ChecklistItemDTO> findChecklists(final String roleId, final String categoryId) {
+    public List<ChecklistItemDTO> findChecklists(final Long roleId, final Long categoryId) {
         List<ChecklistItem> checklistItems = checklistItemRepository.findByRoleIdAndCategoryId(roleId, categoryId);
         List<ChecklistItemDTO> ChecklistItemDTOs = new ArrayList<>();
         checklistItems.forEach(checklist ->
@@ -59,13 +59,13 @@ public class ChecklistService {
         return ChecklistItemDTOs;
     }
 
-    public List<RoleDTO> findRolesByUser(final String userId) {
+    public List<RoleDTO> findRolesByUser(final Long userId) {
         return userDbApi.findRolesByUser(userId);
     }
 
-    public List<ChecklistItemDTO> findChecklistCategories(@Nullable final String userId,
-                                                          @Nullable final String roleId,
-                                                          @Nullable final String categoryId) {
+    public List<ChecklistItemDTO> findChecklistCategories(@Nullable final Long userId,
+                                                          @Nullable final Long roleId,
+                                                          @Nullable final Long categoryId) {
         List<ChecklistItem> checklist =
                 checklistItemRepository.findByUserIdAndRoleIdAndCategoryId(userId, roleId, categoryId);
         List<ChecklistItemDTO> checklistDTO = new ArrayList<>();
@@ -75,7 +75,7 @@ public class ChecklistService {
     }
 
     @Transactional
-    public void updateChecklistItemStatus(final String itemId,
+    public void updateChecklistItemStatus(final Long itemId,
                                           final ChecklistStatusModel model) {
         checklistItemRepository.updateChecklistItemStatus(ChecklistItemStatus.valueOf(model.getStatus()), itemId);
     }

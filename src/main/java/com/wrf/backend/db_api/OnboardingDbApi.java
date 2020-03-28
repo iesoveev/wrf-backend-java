@@ -8,6 +8,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.wrf.backend.exception.ErrorMessage.*;
 import static java.util.Objects.requireNonNull;
 
@@ -27,10 +29,9 @@ public class OnboardingDbApi extends DbApi {
             throw new BusinessException(ONBOARDING_IS_ALREADY_EXISTED);
     }
 
-    public Onboarding findByType(@Nullable final String type) {
+    public List<Onboarding> findByType(@Nullable final String type) {
         return onboardingRepository
-                .findByType(OnboardingType.valueOf(requireNonNull(type).toUpperCase()))
-                .orElseThrow(() -> new BusinessException(ONBOARDING_IS_NOT_FOUND));
+                .findByType(OnboardingType.valueOf(requireNonNull(type).toUpperCase()));
     }
 
 }

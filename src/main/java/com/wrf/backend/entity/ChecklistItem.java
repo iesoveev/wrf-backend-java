@@ -26,13 +26,13 @@ public class ChecklistItem extends BaseEntity {
     private Date done_at;
 
     @Column(name = "role_id")
-    private String roleId;
+    private Long roleId;
 
     @Column(name = "category_id")
-    private String categoryId;
+    private Long categoryId;
 
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
 
     @Column
     @Enumerated(EnumType.STRING)

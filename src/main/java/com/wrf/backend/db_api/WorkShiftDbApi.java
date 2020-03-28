@@ -28,11 +28,11 @@ public class WorkShiftDbApi extends DbApi {
         this.wsRepository = wsRepository;
     }
 
-    public WorkShift findById(final String id) {
+    public WorkShift findById(final Long id) {
         return wsRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(SHIFT_IS_NOT_FOUND));
     }
-    public List<EventIntermediate> findEvents(@Nullable final String id) {
+    public List<EventIntermediate> findEvents(@Nullable final Long id) {
         final var projections = projectionsForEvents();
         var criteria = createCriteria(Event.class, EventIntermediate.class, projections);
         criteria.createAlias("user", "user", JoinType.LEFT_OUTER_JOIN);

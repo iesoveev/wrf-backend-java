@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class DateUtils {
 
-    private static final String dateTimePattern = "dd.MM.yyyy HH:mm:ss";
+    private static final String dateTimePattern = "dd.mm.yyyy, HH:mm";
     public static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(dateTimePattern);
 
     public static Date parse(@Nullable final String date) {

@@ -1,19 +1,23 @@
 package com.wrf.backend.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
-@RequiredArgsConstructor
-public final class UserInnovationRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserInnovationRequest {
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(required = true, value = "Идентификатор категории")
-    private final String categoryId;
+    private Long categoryId;
 
     @NotBlank
     @ApiModelProperty(required = true, value = "Текст инновации")
-    private final String text;
+    private String text;
 }

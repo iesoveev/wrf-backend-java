@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ChecklistCategoryRepository extends PagingAndSortingRepository<ChecklistCategory, String> {
+public interface ChecklistCategoryRepository extends PagingAndSortingRepository<ChecklistCategory, Long> {
 
-    List<ChecklistCategory> findByRoleId(String roleId);
+    List<ChecklistCategory> findByRoleId(Long roleId);
 
 }

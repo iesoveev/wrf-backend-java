@@ -1,16 +1,19 @@
 package com.wrf.backend.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public final class ImageRequestModel {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ImageRequestModel {
 
     @ApiModelProperty(value = "Картинка", required = true)
-    private final String image;
+    private String image;
 
     @ApiModelProperty(value = "Идентификатор инновации", required = true)
-    private final String id;
+    private Long id;
 }

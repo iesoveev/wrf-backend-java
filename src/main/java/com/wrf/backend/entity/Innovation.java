@@ -22,7 +22,7 @@ public class Innovation extends BaseEntity {
 
     @Column(name = "category_id")
     @Description("Идентификатор категории")
-    private String categoryId;
+    private Long categoryId;
 
     @Column(name = "image_uuid")
     @Description("Идентификатор изображения")
@@ -30,9 +30,9 @@ public class Innovation extends BaseEntity {
 
     @Column(name = "user_id")
     @Description("Идентификатор пользователя")
-    private String userId;
+    private Long userId;
 
-    public Innovation(String text, String categoryId, String userId) {
+    public Innovation(String text, Long categoryId, Long userId) {
         this.text = text;
         this.categoryId = categoryId;
         this.userId = userId;

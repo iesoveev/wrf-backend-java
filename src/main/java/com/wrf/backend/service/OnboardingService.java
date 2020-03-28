@@ -17,8 +17,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
 
@@ -54,30 +57,16 @@ public class OnboardingService {
         return new GeneralImageIdModel(imageUuid);
     }
 
-    @Cacheable(cacheNames = "onboardingCache", key = "#type")
-    public OnboardingDTO findOnboarding(@Nullable final String type) {
-        Onboarding onboarding = onboardingDbApi.findByType(type);
-        return OnboardingMapper.INSTANCE.map(onboarding);
+//    @Cacheable(cacheNames = "onboardingCache", key = "#type")
+    public List<OnboardingDTO> findOnboarding(@Nullable final String type) {
+        return onboardingDbApi.findByType(type)
+                .stream()
+                .map(OnboardingMapper.INSTANCE::map)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public String getImage(@Nullable final String imageUuid, final String path) {
-        return Base64.encodeBase64String(imageService.getImage(path + imageUuid));
-    }
-
-    @CacheEvict(cacheNames = "onboardingCache", key = "#model.type")
-    public void updateOnboarding(final OnboardingUpdateModel model) {
-        Onboarding onboarding = onboardingDbApi.findByType(model.getType());
-        String targetImageUuid = onboarding.getImageUuid();
-        onboarding.setTextIfPresent(model.getText());
-        onboarding.setTitleIfPresent(model.getTitle());
-        onboarding.setImageIfPresent(model.getImage());
-
-        //async call
-        Optional.ofNullable(model.getImage()).ifPresent(s ->
-                imageService.replaceImage(targetImageUuid, onboarding.getImageUuid(),
-                        model.getImage(), appConfig.getOnboardingImagePath()));
-
-        onboardingRepository.save(onboarding);
+    public String getImage(@Nullable final String imageUuid) {
+        return Base64.encodeBase64String(imageService.getImage(appConfig.getOnboardingImagePath() + imageUuid));
     }
 
     public void checkImageState(final String imageUuid) {

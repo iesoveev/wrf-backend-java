@@ -7,20 +7,18 @@ import com.wrf.backend.model.request.UserInnovationRequest;
 import com.wrf.backend.model.response.InnovationDTO;
 import com.wrf.backend.service.InnovationService;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/innovations", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
+@RequestMapping(value = "/innovations")
 public class InnovationController {
 
     private final InnovationService innovationService;
-
-    public InnovationController(InnovationService innovationService) {
-        this.innovationService = innovationService;
-    }
 
     @ApiOperation(value = "Добавить инновацию")
     @PostMapping

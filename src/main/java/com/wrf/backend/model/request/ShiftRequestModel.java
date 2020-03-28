@@ -10,5 +10,5 @@ public class ShiftRequestModel {
 
     @NotEmpty
     @ApiModelProperty(value = "Идентификаторы участников команды", required = true)
-    private List<String> memberIds;
+    private List<Long> memberIds;
 }

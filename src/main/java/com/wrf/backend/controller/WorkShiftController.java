@@ -8,7 +8,6 @@ import com.wrf.backend.service.WorkShiftService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class WorkShiftController {
 
     @ApiOperation(value = "Получение событый смены")
     @GetMapping("/{shiftId}/events")
-    public List<EventDTO> getEvents(@PathVariable String shiftId) {
+    public List<EventDTO> getEvents(@PathVariable Long shiftId) {
         return workShiftService.getEvents(shiftId);
     }
 

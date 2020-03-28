@@ -29,10 +29,10 @@ public class WorkShift extends BaseEntity {
     private List<User> members = new ArrayList<>();
 
     @Column(name = "user_opened_id")
-    private String userOpenedId;
+    private Long userOpenedId;
 
     @Column(name = "user_closed_id")
-    private String userClosedId;
+    private Long userClosedId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "workShift")
     private List<Event> events = new ArrayList<>();

@@ -26,8 +26,8 @@ public class LogService {
         hibernateTemplate.save(new AndroidLog(message));
     }
 
-    public List<AndroidLogDTO> findLog(final GeneralPeriodModel model) {
-        List<AndroidLog> logs = logDbApi.getAndroidLog(model);
+    public List<AndroidLogDTO> findLog(final String beginDate, final String endDate) {
+        List<AndroidLog> logs = logDbApi.getAndroidLog(beginDate, endDate);
         List<AndroidLogDTO> logDTOs = new ArrayList<>();
 
         logs.forEach( log ->

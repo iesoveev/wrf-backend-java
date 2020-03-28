@@ -22,13 +22,13 @@ public class Event extends BaseEntity {
     private WorkShift workShift;
 
     @Column(name = "work_shift_id")
-    private String workShiftId;
+    private Long workShiftId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false, insertable = false)
     private User user;
 
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
 }
 

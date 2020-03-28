@@ -10,11 +10,11 @@ import javax.persistence.MappedSuperclass;
 @Setter
 public abstract class BaseDTO {
 
-    private String id;
+    private Long id;
 
     private String create_at;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 }

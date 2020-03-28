@@ -1,12 +1,15 @@
 package com.wrf.backend.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public final class GeneralImageIdModel {
+@AllArgsConstructor
+@NoArgsConstructor
+public class GeneralImageIdModel {
 
-    private final String imageUuid;
+    private String imageUuid;
 
 }
