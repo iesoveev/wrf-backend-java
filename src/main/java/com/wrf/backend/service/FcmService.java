@@ -1,28 +1,24 @@
 package com.wrf.backend.service;
 
 import com.google.firebase.messaging.*;
-import com.wrf.backend.model.response.PushNotificationModel;
+import com.wrf.backend.model.response.PushEvent;
+import com.wrf.backend.model.response.PushModel;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FcmService {
 
+    private final AsyncService asyncService;
+
     private static final Logger log = LogManager.getLogger(FcmService.class);
-
-    final PushNotificationModel notifyModel;
-
-    public FcmService(PushNotificationModel notifyModel) {
-        this.notifyModel = notifyModel;
-    }
 
     private AndroidConfig getAndroidConfig(String topic) {
         return AndroidConfig.builder()
@@ -36,12 +32,12 @@ public class FcmService {
                 .setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
     }
 
-    private Message getMsg(PushNotificationModel model, String token) {
-        return getPreconfiguredMessageBuilder(model).setToken(token)
-                .build();
+    private void sendPush(PushModel model, String token) {
+        Message message = getPreconfiguredMessageBuilder(model).setToken(token).build();
+        asyncService.sendPush(message, token);
     }
 
-    private Message.Builder getPreconfiguredMessageBuilder(PushNotificationModel model) {
+    private Message.Builder getPreconfiguredMessageBuilder(PushModel model) {
         AndroidConfig androidConfig = getAndroidConfig(model.getTopic());
         ApnsConfig apnsConfig = getApnsConfig(model.getTopic());
         return Message.builder()
@@ -49,23 +45,26 @@ public class FcmService {
                         new Notification(model.getTitle(), model.getMessage()));
     }
 
-    public void sendBroadcastNotify(List<String> receivers, String text) {
-        notifyModel.setMessage(text);
-        List<Message> messages = receivers.stream()
-                .map(token -> getMsg(notifyModel, token))
-                .collect(Collectors.toUnmodifiableList());
+    public void buildAndSendPush(List<String> receivers, String sender, PushEvent pushEvent, String text) {
+        var pushModel = buildPushModel(sender, pushEvent, text);
+        receivers.forEach(token -> sendPush(pushModel, token));
 
-        BatchResponse response;
-        try {
-            response = FirebaseMessaging.getInstance().sendAll(messages);
-        } catch (FirebaseMessagingException ex) {
-            log.warn(ex.getLocalizedMessage());
-            return;
+    }
+
+    private PushModel buildPushModel(String sender, PushEvent pushEvent, String text) {
+        var pushModel = new PushModel(pushEvent.getDescription(),
+                pushEvent.getDescription());
+
+        switch (pushEvent) {
+            case NEW_EVENT:
+                pushModel.setMessage(sender + " добавил новое событие в текущую смену. " + text);
+                break;
+            case WS_CLOSE:
+                pushModel.setMessage(sender + " закрыл текущую смену.");
+                break;
         }
-        response.getResponses().forEach(row -> {
-            if (!row.isSuccessful())
-                log.warn(row.getException().getLocalizedMessage());
-        });
+
+        return pushModel;
     }
 }
 

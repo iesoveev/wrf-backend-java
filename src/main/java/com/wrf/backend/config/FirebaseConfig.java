@@ -3,8 +3,6 @@ package com.wrf.backend.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.wrf.backend.model.response.PushNotificationModel;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -32,10 +30,5 @@ public class FirebaseConfig {
                     .build();
             FirebaseApp.initializeApp(options);
         }
-    }
-
-    @Bean
-    PushNotificationModel pushNotificationModel() {
-        return new PushNotificationModel("Новое событие", "Новое событие в текущей смене");
     }
 }

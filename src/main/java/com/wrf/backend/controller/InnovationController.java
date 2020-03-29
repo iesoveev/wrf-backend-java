@@ -8,7 +8,6 @@ import com.wrf.backend.model.response.InnovationDTO;
 import com.wrf.backend.service.InnovationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;

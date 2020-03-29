@@ -1,20 +1,25 @@
 package com.wrf.backend.service;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class AsyncService {
 
-    final FcmService fcmService;
+    private static final Logger log = LogManager.getLogger(AsyncService.class);
 
-    public AsyncService(FcmService fcmService) {
-        this.fcmService = fcmService;
-    }
-
-    @Async
-    public void sendNotify(List<String> receivers, String message) {
-        fcmService.sendBroadcastNotify(receivers, message);
+    @Async("pushExecutor")
+    public void sendPush(final Message message, final String token) {
+        try {
+            Thread.sleep(1000);
+            FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException | InterruptedException ex) {
+            log.warn("Notification failed. Device token: " + token);
+        }
     }
 }

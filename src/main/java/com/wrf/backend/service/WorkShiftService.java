@@ -12,6 +12,7 @@ import com.wrf.backend.mapper.EventMapper;
 import com.wrf.backend.model.request.*;
 import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
+import com.wrf.backend.model.response.PushEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -33,7 +34,7 @@ public class WorkShiftService {
 
     final WorkShiftDbApi workShiftDbApi;
 
-    final AsyncService asyncService;
+    final FcmService fcmService;
 
     final WSRepository wsRepository;
 
@@ -89,12 +90,8 @@ public class WorkShiftService {
 
         wsRepository.save(workShift);
 
-//        List<String> receivers = workShift.getMembers().stream()
-//                .map(User::getDeviceToken)
-//                .filter(token -> !token.equals(user.getDeviceToken()))
-//                .collect(Collectors.toUnmodifiableList());
-//
-//        asyncService.sendNotify(receivers, event.getText());
+        fcmService.buildAndSendPush(getReceivers(workShift, user.getDeviceToken()),
+                user.getFullName(), PushEvent.NEW_EVENT, event.getText());
     }
 
     public List<EventDTO> getEvents(@Nullable final Long shiftId) {
@@ -111,9 +108,15 @@ public class WorkShiftService {
         if (workShift.getClose_at() != null)
             throw new BusinessException(SHIFT_IS_ALREADY_CLOSED);
 
+        final var user = userDbApi.findById(authService.getUserInfo().getId());
+
         workShift.setClose_at(new Date());
-        workShift.setUserClosedId(authService.getUserInfo().getId());
+        workShift.setUserClosedId(user.getId());
         wsRepository.save(workShift);
+
+        fcmService.buildAndSendPush(getReceivers(workShift, user.getDeviceToken()),
+                user.getFullName(), PushEvent.WS_CLOSE, null);
+
     }
 
     public List<EventDTO> search(final String text,
@@ -123,6 +126,15 @@ public class WorkShiftService {
                 .findEventsByText(text, limit, offset)
                 .stream()
                 .map(EventMapper.INSTANCE::map)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<String> getReceivers(final WorkShift workShift, final String deviceToken) {
+        return workShift
+                .getMembers()
+                .stream()
+                .map(User::getDeviceToken)
+                .filter(token -> !token.equals(deviceToken))
                 .collect(Collectors.toUnmodifiableList());
     }
 }
