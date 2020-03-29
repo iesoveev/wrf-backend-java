@@ -4,20 +4,18 @@ import com.wrf.backend.db_api.repository.UserRepository;
 import com.wrf.backend.entity.User;
 import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.model.response.RoleDTO;
-import com.wrf.backend.utils.PasswordUtils;
+import com.wrf.backend.model.response.UserDTO;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
-import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 import static com.wrf.backend.exception.ErrorMessage.USER_IS_ALREADY_REGISTERED;
 import static com.wrf.backend.exception.ErrorMessage.USER_IS_NOT_FOUND;
+import static org.hibernate.criterion.Projections.*;
+import static org.hibernate.criterion.Restrictions.*;
 
 @Repository
 public class UserDbApi extends DbApi {
@@ -34,11 +32,22 @@ public class UserDbApi extends DbApi {
                 .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
     }
 
+    public List<UserDTO> findAllUsers() {
+        final var criteria = DetachedCriteria.forClass(User.class);
+        criteria.setProjection(
+                projectionList()
+                        .add(property("id"), "id")
+                        .add(property("phone"), "phone")
+                        .add(property("fullName"), "fullName"));
+        criteria.setResultTransformer(Transformers.aliasToBean(UserDTO.class));
+        return (List<UserDTO>) hibernateTemplate.findByCriteria(criteria);
+    }
+
     public void checkUserExist(final String phone) {
         final var criteria = DetachedCriteria.forClass(User.class);
-        criteria.add(Restrictions.eq("phone", phone));
+        criteria.add(eq("phone", phone));
         criteria.setProjection(
-                Projections.rowCount()
+                rowCount()
         );
         final long count = (Long) findFirst(criteria);
         if (count > 0)
@@ -47,7 +56,7 @@ public class UserDbApi extends DbApi {
 
     public List<User> findUsers(final List<Long> ids) {
         final var criteria = DetachedCriteria.forClass(User.class)
-                .add(Restrictions.in("id", ids));
+                .add(in("id", ids));
         return (List<User>) hibernateTemplate.findByCriteria(criteria);
     }
 
@@ -55,12 +64,12 @@ public class UserDbApi extends DbApi {
         final var criteria = DetachedCriteria.forClass(User.class);
         criteria.createAlias("roles", "role", JoinType.LEFT_OUTER_JOIN);
 
-        criteria.add(Restrictions.eq("id", userId));
+        criteria.add(eq("id", userId));
 
         criteria.setProjection(
-                Projections.projectionList()
-                        .add(Projections.property("role.id"), "id")
-                        .add(Projections.property("role.name"), "name")
+                projectionList()
+                        .add(property("role.id"), "id")
+                        .add(property("role.name"), "name")
         );
         criteria.setResultTransformer(Transformers.aliasToBean(RoleDTO.class));
         return (List<RoleDTO>) hibernateTemplate.findByCriteria(criteria);

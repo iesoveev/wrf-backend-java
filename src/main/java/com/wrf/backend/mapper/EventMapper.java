@@ -1,6 +1,5 @@
 package com.wrf.backend.mapper;
 
-import com.wrf.backend.entity.Event;
 import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.EventIntermediate;
 import org.mapstruct.Mapper;
