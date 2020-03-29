@@ -27,8 +27,6 @@ import static com.wrf.backend.utils.DateUtils.*;
 @RequiredArgsConstructor
 public class WorkShiftService {
 
-    final HibernateTemplate hibernateTemplate;
-
     final AuthService authService;
 
     final UserDbApi userDbApi;
@@ -40,8 +38,6 @@ public class WorkShiftService {
     final WSRepository wsRepository;
 
     final EventRepository eventRepository;
-
-    final UserRepository userRepository;
 
     public GeneralIdDTO openWS(final ShiftRequestModel model) {
         final List<User> members = userDbApi.findUsers(model.getMemberIds());
@@ -84,8 +80,7 @@ public class WorkShiftService {
         event.setText(model.getText());
         event.setWorkShift(workShift);
         event.setWorkShiftId(workShift.getId());
-        final var user = userRepository.findById(authService.getUserInfo().getId())
-                .orElseThrow(() -> new BusinessException(USER_IS_NOT_FOUND));
+        final var user = userDbApi.findById(authService.getUserInfo().getId());
         event.setUser(user);
         event.setUserId(user.getId());
         eventRepository.save(event);

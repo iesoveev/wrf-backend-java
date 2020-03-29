@@ -4,16 +4,19 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageRequestModel {
 
+    @NotBlank
     @ApiModelProperty(value = "Картинка", required = true)
     private String image;
 
+    @NotNull
     @ApiModelProperty(value = "Идентификатор инновации", required = true)
     private Long id;
 }

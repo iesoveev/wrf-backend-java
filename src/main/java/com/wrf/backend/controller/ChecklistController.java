@@ -8,20 +8,17 @@ import com.wrf.backend.model.response.Response;
 import com.wrf.backend.model.response.RoleDTO;
 import com.wrf.backend.service.ChecklistService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.MediaType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/checklists", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
+@RequestMapping(value = "/checklists")
 public class ChecklistController {
 
     final ChecklistService checklistService;
-
-    public ChecklistController(ChecklistService checklistService) {
-        this.checklistService = checklistService;
-    }
 
     @ApiOperation(value = "Получние ролей пользователей")
     @GetMapping("/roles")
@@ -40,20 +37,6 @@ public class ChecklistController {
     public List<ChecklistItemDTO> checklists(@RequestParam Long role_id,
                                              @RequestParam Long category_id) {
         return checklistService.findChecklists(role_id, category_id);
-    }
-
-    @ApiOperation(value = "Получение ролей для конкретного пользователя")
-    @GetMapping("/user/{user_id}/roles")
-    public List<RoleDTO> findRolesByUser(@PathVariable Long user_id) {
-        return checklistService.findRolesByUser(user_id);
-    }
-
-    @ApiOperation(value = "Получение чек-листов для пользователя")
-    @GetMapping("/user/{user_id}/roles/{role_id}/categories/{category_id}")
-    public List<ChecklistItemDTO> findChecklistCategories(@PathVariable Long user_id,
-                                                          @PathVariable Long role_id,
-                                                          @PathVariable Long category_id) {
-        return checklistService.findChecklistCategories(user_id, role_id, category_id);
     }
 
     @ApiOperation(value = "Обновление статуса таски чек-листа")

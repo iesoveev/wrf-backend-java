@@ -1,12 +1,14 @@
 package com.wrf.backend.model.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import javax.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class GeneralIdModel {
 
     @NotNull
