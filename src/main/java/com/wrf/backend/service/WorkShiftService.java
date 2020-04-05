@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wrf.backend.exception.ErrorMessage.*;
-import static com.wrf.backend.utils.DateUtils.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +35,6 @@ public class WorkShiftService {
 
     final FcmService fcmService;
 
-    final WSRepository wsRepository;
-
     final EventRepository eventRepository;
 
     public GeneralIdDTO openWS(final ShiftRequestModel model) {
@@ -47,7 +44,11 @@ public class WorkShiftService {
         ws.setOpen_at(new Date());
         ws.setUserOpenedId(authService.getUserInfo().getId());
 
-        return new GeneralIdDTO(wsRepository.save(ws).getId());
+        final var user = userDbApi.findById(authService.getUserInfo().getId());
+
+        fcmService.buildAndSendPush(getReceivers(ws, user.getDeviceToken()),
+                user.getFullName(), PushEvent.WS_OPEN, null);
+        return new GeneralIdDTO(workShiftDbApi.save(ws).getId());
     }
 
     public void addMember(final AddMemberToWSModel model) {
@@ -59,7 +60,7 @@ public class WorkShiftService {
 
         workShift.getMembers().add(user);
 
-        wsRepository.save(workShift);
+        workShiftDbApi.save(workShift);
     }
 
     public void replaceMember(final ReplaceMemberModel model) {
@@ -69,13 +70,12 @@ public class WorkShiftService {
         workShift.getMembers().remove(targetUser);
         workShift.getMembers().add(newUser);
 
-        wsRepository.save(workShift);
+        workShiftDbApi.save(workShift);
     }
 
     @Transactional
     public void addEvent(final EventModel model) {
-        final var workShift = wsRepository.findById(model.getShiftId())
-                .orElseThrow(() -> new BusinessException(SHIFT_IS_NOT_FOUND));
+        final var workShift = workShiftDbApi.findById(model.getShiftId());
 
         final var event = new Event();
         event.setText(model.getText());
@@ -88,7 +88,7 @@ public class WorkShiftService {
 
         workShift.getEvents().add(event);
 
-        wsRepository.save(workShift);
+        workShiftDbApi.save(workShift);
 
         fcmService.buildAndSendPush(getReceivers(workShift, user.getDeviceToken()),
                 user.getFullName(), PushEvent.NEW_EVENT, event.getText());
@@ -112,7 +112,7 @@ public class WorkShiftService {
 
         workShift.setClose_at(new Date());
         workShift.setUserClosedId(user.getId());
-        wsRepository.save(workShift);
+        workShiftDbApi.save(workShift);
 
         fcmService.buildAndSendPush(getReceivers(workShift, user.getDeviceToken()),
                 user.getFullName(), PushEvent.WS_CLOSE, null);

@@ -16,9 +16,8 @@ public class AsyncService {
     @Async("pushExecutor")
     public void sendPush(final Message message, final String token) {
         try {
-            Thread.sleep(1000);
             FirebaseMessaging.getInstance().send(message);
-        } catch (FirebaseMessagingException | InterruptedException ex) {
+        } catch (FirebaseMessagingException ex) {
             log.warn("Notification failed. Device token: " + token);
         }
     }

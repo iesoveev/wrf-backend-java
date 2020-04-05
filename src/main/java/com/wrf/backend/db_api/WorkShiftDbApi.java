@@ -4,18 +4,13 @@ import com.wrf.backend.db_api.repository.WSRepository;
 import com.wrf.backend.entity.Event;
 import com.wrf.backend.entity.WorkShift;
 import com.wrf.backend.exception.BusinessException;
-import com.wrf.backend.exception.ErrorMessage;
 import com.wrf.backend.model.response.EventIntermediate;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.Optional;
-
 import static com.wrf.backend.exception.ErrorMessage.SHIFT_IS_NOT_FOUND;
 
 @Repository
@@ -31,6 +26,10 @@ public class WorkShiftDbApi extends DbApi {
     public WorkShift findById(final Long id) {
         return wsRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(SHIFT_IS_NOT_FOUND));
+    }
+
+    public WorkShift save(final WorkShift workShift) {
+        return wsRepository.save(workShift);
     }
     public List<EventIntermediate> findEvents(@Nullable final Long id) {
         final var projections = projectionsForEvents();

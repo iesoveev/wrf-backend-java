@@ -22,7 +22,6 @@ public class AuthController {
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TokenDTO addUser(@Valid @RequestBody UserRegistrationModel model,
                             @RequestHeader String deviceToken) throws NoSuchAlgorithmException {
-        // todo придумать что делать, если токен будет не валидным и как его проверить
         return authService.addUser(model, deviceToken);
     }
 

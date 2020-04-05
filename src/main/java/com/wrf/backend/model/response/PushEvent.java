@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 public enum PushEvent {
 
     NEW_EVENT("Новое событие"),
+    WS_OPEN("Открытие смены"),
     WS_CLOSE("Закрытие смены");
 
     @Getter

@@ -15,10 +15,10 @@
         <keepAliveDuration>5 minutes</keepAliveDuration>
     </appender>
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/app/logs/wrf-backend.log</file>
+        <file>./app/logs/wrf-backend.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>/app/logs/wrf-backend_%i.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>./app/logs/wrf-backend_%i.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>60</maxHistory>

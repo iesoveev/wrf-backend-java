@@ -6,11 +6,9 @@ import com.wrf.backend.model.response.PushModel;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +30,6 @@ public class FcmService {
                 .setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
     }
 
-    private void sendPush(PushModel model, String token) {
-        Message message = getPreconfiguredMessageBuilder(model).setToken(token).build();
-        asyncService.sendPush(message, token);
-    }
-
     private Message.Builder getPreconfiguredMessageBuilder(PushModel model) {
         AndroidConfig androidConfig = getAndroidConfig(model.getTopic());
         ApnsConfig apnsConfig = getApnsConfig(model.getTopic());
@@ -48,7 +41,11 @@ public class FcmService {
     public void buildAndSendPush(List<String> receivers, String sender, PushEvent pushEvent, String text) {
         var pushModel = buildPushModel(sender, pushEvent, text);
         receivers.forEach(token -> sendPush(pushModel, token));
+    }
 
+    private void sendPush(PushModel model, String token) {
+        Message message = getPreconfiguredMessageBuilder(model).setToken(token).build();
+        asyncService.sendPush(message, token);
     }
 
     private PushModel buildPushModel(String sender, PushEvent pushEvent, String text) {
@@ -61,6 +58,9 @@ public class FcmService {
                 break;
             case WS_CLOSE:
                 pushModel.setMessage(sender + " закрыл текущую смену.");
+                break;
+            case WS_OPEN:
+                pushModel.setMessage(sender + " открыл смену.");
                 break;
         }
 
