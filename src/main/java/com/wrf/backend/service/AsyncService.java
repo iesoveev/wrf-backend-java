@@ -3,22 +3,27 @@ package com.wrf.backend.service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.wrf.backend.db_api.repository.AndroidLogRepository;
+import com.wrf.backend.entity.AndroidLog;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AsyncService {
 
-    private static final Logger log = LogManager.getLogger(AsyncService.class);
+    private final AndroidLogRepository androidLogRepository;
+
+    private static final FirebaseMessaging firebaseInstance = FirebaseMessaging.getInstance();
 
     @Async("pushExecutor")
     public void sendPush(final Message message, final String token) {
         try {
-            FirebaseMessaging.getInstance().send(message);
+            firebaseInstance.send(message);
+            androidLogRepository.save(new AndroidLog("Notification success. Device token: " + token));
         } catch (FirebaseMessagingException ex) {
-            log.warn("Notification failed. Device token: " + token);
+            androidLogRepository.save(new AndroidLog("Notification failed. Device token: " + token));
         }
     }
 }
