@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.List;
 
@@ -48,7 +50,7 @@ public class FcmService {
         asyncService.sendPush(message, token);
     }
 
-    private PushModel buildPushModel(String sender, PushEvent pushEvent, String text) {
+    private PushModel buildPushModel(@Nullable String sender, PushEvent pushEvent, @Nullable String text) {
         var pushModel = new PushModel(pushEvent.getDescription(),
                 pushEvent.getDescription());
 
@@ -62,6 +64,8 @@ public class FcmService {
             case WS_OPEN:
                 pushModel.setMessage(sender + " открыл смену.");
                 break;
+            case SAVE_IMAGE:
+                pushModel.setMessage("Не удалось сохранить картинку");
         }
 
         return pushModel;

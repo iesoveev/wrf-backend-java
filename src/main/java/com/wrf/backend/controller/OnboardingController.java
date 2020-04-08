@@ -35,11 +35,4 @@ public class OnboardingController {
     public String getPhoto(@PathVariable String image_uuid) {
         return onboardingService.getImage(image_uuid);
     }
-
-    @ApiOperation(value = "Проверка статуса сохранения фотографии")
-    @GetMapping("/check_image_state/{image_uuid}")
-    public Response checkImageState(@PathVariable String image_uuid) {
-        onboardingService.checkImageState(image_uuid);
-        return new Response();
-    }
 }

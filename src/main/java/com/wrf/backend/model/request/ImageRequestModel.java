@@ -17,6 +17,6 @@ public class ImageRequestModel {
     private String image;
 
     @NotNull
-    @ApiModelProperty(value = "Идентификатор инновации", required = true)
+    @ApiModelProperty(value = "Идентификатор сущности", required = true)
     private Long id;
 }

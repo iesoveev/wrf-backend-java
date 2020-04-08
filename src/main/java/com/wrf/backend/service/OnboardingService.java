@@ -68,8 +68,4 @@ public class OnboardingService {
     public String getImage(@Nullable final String imageUuid) {
         return Base64.encodeBase64String(imageService.getImage(appConfig.getOnboardingImagePath() + imageUuid));
     }
-
-    public void checkImageState(final String imageUuid) {
-        imageService.checkImageState(imageUuid, appConfig.getOnboardingImagePath());
-    }
 }
