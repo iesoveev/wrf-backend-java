@@ -15,12 +15,10 @@ public class AsyncService {
 
     private final AndroidLogRepository androidLogRepository;
 
-    private static final FirebaseMessaging firebaseInstance = FirebaseMessaging.getInstance();
-
     @Async("pushExecutor")
     public void sendPush(final Message message, final String token) {
         try {
-            firebaseInstance.send(message);
+            FirebaseMessaging.getInstance().send(message);
             androidLogRepository.save(new AndroidLog("Notification success. Device token: " + token));
         } catch (FirebaseMessagingException ex) {
             androidLogRepository.save(new AndroidLog("Notification failed. Device token: " + token));
