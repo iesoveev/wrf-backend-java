@@ -12,10 +12,7 @@ import com.wrf.backend.mapper.ChecklistMapper;
 import com.wrf.backend.mapper.RoleMapper;
 import com.wrf.backend.model.request.ChecklistPackItemStatusModel;
 import com.wrf.backend.model.request.ChecklistStatusModel;
-import com.wrf.backend.model.response.BaseDTO;
-import com.wrf.backend.model.response.ChecklistCategoryDTO;
-import com.wrf.backend.model.response.ChecklistItemDTO;
-import com.wrf.backend.model.response.RoleDTO;
+import com.wrf.backend.model.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +69,7 @@ public class ChecklistService {
             checklistItemRepository.updateChecklistItem(ChecklistItemStatus.valueOf(item.getStatus()), item.getItemId()));
     }
 
-    private <T extends BaseDTO, E extends BaseEntity> List<T> map (
+    private <T extends IdDTO, E extends BaseEntity> List<T> map (
             Stream<E> stream, Function<E, T> mapper) {
         return stream
                 .map(mapper)

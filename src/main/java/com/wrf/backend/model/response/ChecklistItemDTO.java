@@ -6,11 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChecklistItemDTO extends BaseDTO {
+public class ChecklistItemDTO extends IdDTO {
 
     private String title;
 
     private String subtitle;
+
+    private String create_at;
 
     private String description;
 
