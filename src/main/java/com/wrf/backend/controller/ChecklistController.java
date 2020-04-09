@@ -27,8 +27,8 @@ public class ChecklistController {
     }
 
     @ApiOperation(value = "Получение категорий чек-листов")
-    @GetMapping("/categories/{role_id}")
-    public List<ChecklistCategoryDTO> findAllCategories(@PathVariable Long role_id) {
+    @GetMapping("/categories")
+    public List<ChecklistCategoryDTO> findAllCategories(@RequestParam Long role_id) {
         return checklistService.findCategoriesByRole(role_id);
     }
 
@@ -42,7 +42,7 @@ public class ChecklistController {
     @ApiOperation(value = "Обновление статуса таски чек-листа")
     @PostMapping("/{item_id}/update")
     public Response updateChecklistStatus(@PathVariable Long item_id,
-                                         @Valid @RequestBody ChecklistStatusModel model) {
+                                          @Valid @RequestBody ChecklistStatusModel model) {
         checklistService.updateChecklistItemStatus(item_id, model);
         return new Response();
     }

@@ -1,11 +1,12 @@
 package com.wrf.backend.service;
 
 import com.wrf.backend.ChecklistItemStatus;
-import com.wrf.backend.db_api.repository.ChecklistCategoryRepository;
 import com.wrf.backend.db_api.repository.ChecklistItemRepository;
 import com.wrf.backend.db_api.repository.RoleRepository;
 import com.wrf.backend.entity.BaseEntity;
 import com.wrf.backend.entity.ChecklistItem;
+import com.wrf.backend.entity.Role;
+import com.wrf.backend.exception.BusinessException;
 import com.wrf.backend.mapper.ChecklistCategoryMapper;
 import com.wrf.backend.mapper.ChecklistMapper;
 import com.wrf.backend.mapper.RoleMapper;
@@ -24,13 +25,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.wrf.backend.exception.ErrorMessage.*;
+
 @Service
 @RequiredArgsConstructor
 public class ChecklistService {
 
     private final RoleRepository roleRepository;
-
-    private final ChecklistCategoryRepository checklistCategoryRepository;
 
     private final ChecklistItemRepository checklistItemRepository;
 
@@ -46,8 +47,10 @@ public class ChecklistService {
     }
 
     public List<ChecklistCategoryDTO> findCategoriesByRole(final Long roleId) {
-       return map(checklistCategoryRepository.findByRoleId(roleId).stream(),
-               ChecklistCategoryMapper.INSTANCE::map);
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new BusinessException(ROLE_IS_NOT_FOUND));
+        return map(role.getCategories().stream(),
+                ChecklistCategoryMapper.INSTANCE::map);
     }
 
     public List<ChecklistItemDTO> findChecklists(final Long roleId, final Long categoryId) {
@@ -57,22 +60,22 @@ public class ChecklistService {
 
     }
 
-    private <T extends BaseDTO, E extends BaseEntity> List<T> map (
-            Stream<E> stream, Function<E, T> mapper) {
-        return stream
-                .map(mapper)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
     @Transactional
     public void updateChecklistItemStatus(final Long itemId,
                                           final ChecklistStatusModel model) {
-        checklistItemRepository.updateChecklistItemStatus(ChecklistItemStatus.valueOf(model.getStatus()), itemId);
+        checklistItemRepository.updateChecklistItemStatus(ChecklistItemStatus.valueOf(model.getStatus().toUpperCase()), itemId);
     }
 
     @Transactional
     public void updatePackChecklistStatus(final ChecklistPackItemStatusModel model) {
         model.getItems().forEach(item ->
-            checklistItemRepository.updateChecklistItemStatus(ChecklistItemStatus.valueOf(item.getStatus()), item.getItemId()));
+            checklistItemRepository.updateChecklistItem(ChecklistItemStatus.valueOf(item.getStatus()), item.getItemId()));
+    }
+
+    private <T extends BaseDTO, E extends BaseEntity> List<T> map (
+            Stream<E> stream, Function<E, T> mapper) {
+        return stream
+                .map(mapper)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

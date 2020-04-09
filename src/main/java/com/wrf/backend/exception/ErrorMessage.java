@@ -17,7 +17,8 @@ public enum ErrorMessage {
     SHIFT_IS_ALREADY_CLOSED("Смена уже закрыта"),
     USER_IS_ALREADY_ON_THE_SHIFT("Пользователь уже состоит в смене"),
     ONBOARDING_IS_NOT_FOUND("Онбоардинг не найден"),
-    ONBOARDING_IS_ALREADY_EXISTED("Онбоардинг с таким типом уже существует");
+    ONBOARDING_IS_ALREADY_EXISTED("Онбоардинг с таким типом уже существует"),
+    ROLE_IS_NOT_FOUND("Роль не найдена");
 
     private String message;
 

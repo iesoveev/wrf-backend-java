@@ -17,4 +17,8 @@ public interface ChecklistItemRepository extends PagingAndSortingRepository<Chec
     @Modifying
     @Query("update ChecklistItem set status = ?1 where id = ?2")
     void updateChecklistItemStatus(ChecklistItemStatus status, Long itemId);
+
+    @Modifying
+    @Query("update ChecklistItem set status = ?1 where id = ?2 and status = 'INTACT'")
+    void updateChecklistItem(ChecklistItemStatus status, Long itemId);
 }
