@@ -12,8 +12,6 @@ import java.util.List;
 @Repository
 public interface ChecklistItemRepository extends PagingAndSortingRepository<ChecklistItem, Long> {
 
-    List<ChecklistItem> findByRoleIdAndCategoryId(Long roleId, Long categoryId);
-
     List<ChecklistItem> findByUserIdAndRoleIdAndCategoryId(Long userId, Long roleId, Long categoryId);
 
     @Modifying

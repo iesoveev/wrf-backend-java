@@ -1,26 +1,28 @@
 package com.wrf.backend.service;
 
 import com.wrf.backend.ChecklistItemStatus;
-import com.wrf.backend.db_api.UserDbApi;
 import com.wrf.backend.db_api.repository.ChecklistCategoryRepository;
 import com.wrf.backend.db_api.repository.ChecklistItemRepository;
 import com.wrf.backend.db_api.repository.RoleRepository;
+import com.wrf.backend.entity.BaseEntity;
 import com.wrf.backend.entity.ChecklistItem;
 import com.wrf.backend.mapper.ChecklistCategoryMapper;
 import com.wrf.backend.mapper.ChecklistMapper;
 import com.wrf.backend.mapper.RoleMapper;
 import com.wrf.backend.model.request.ChecklistPackItemStatusModel;
 import com.wrf.backend.model.request.ChecklistStatusModel;
+import com.wrf.backend.model.response.BaseDTO;
 import com.wrf.backend.model.response.ChecklistCategoryDTO;
 import com.wrf.backend.model.response.ChecklistItemDTO;
 import com.wrf.backend.model.response.RoleDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class ChecklistService {
 
     private final ChecklistItemRepository checklistItemRepository;
 
-    private final UserDbApi userDbApi;
+    private final AuthService authService;
 
     public List<RoleDTO> findAllRoles() {
         var roles = roleRepository.findAll();
@@ -44,34 +46,22 @@ public class ChecklistService {
     }
 
     public List<ChecklistCategoryDTO> findCategoriesByRole(final Long roleId) {
-        return checklistCategoryRepository
-                .findByRoleId(roleId)
-                .stream()
-                .map(ChecklistCategoryMapper.INSTANCE::map)
-                .collect(Collectors.toUnmodifiableList());
+       return map(checklistCategoryRepository.findByRoleId(roleId).stream(),
+               ChecklistCategoryMapper.INSTANCE::map);
     }
 
     public List<ChecklistItemDTO> findChecklists(final Long roleId, final Long categoryId) {
-        List<ChecklistItem> checklistItems = checklistItemRepository.findByRoleIdAndCategoryId(roleId, categoryId);
-        List<ChecklistItemDTO> ChecklistItemDTOs = new ArrayList<>();
-        checklistItems.forEach(checklist ->
-                ChecklistItemDTOs.add(ChecklistMapper.INSTANCE.map(checklist)));
-        return ChecklistItemDTOs;
+        Stream<ChecklistItem> checklistStream = checklistItemRepository
+                .findByUserIdAndRoleIdAndCategoryId(authService.getUserInfo().getId(), roleId, categoryId).stream();
+        return map(checklistStream, ChecklistMapper.INSTANCE::map);
+
     }
 
-    public List<RoleDTO> findRolesByUser(final Long userId) {
-        return userDbApi.findRolesByUser(userId);
-    }
-
-    public List<ChecklistItemDTO> findChecklistCategories(@Nullable final Long userId,
-                                                          @Nullable final Long roleId,
-                                                          @Nullable final Long categoryId) {
-        List<ChecklistItem> checklist =
-                checklistItemRepository.findByUserIdAndRoleIdAndCategoryId(userId, roleId, categoryId);
-        List<ChecklistItemDTO> checklistDTO = new ArrayList<>();
-        checklist.forEach(checklistItem ->
-                checklistDTO.add(ChecklistMapper.INSTANCE.map(checklistItem)));
-        return checklistDTO;
+    private <T extends BaseDTO, E extends BaseEntity> List<T> map (
+            Stream<E> stream, Function<E, T> mapper) {
+        return stream
+                .map(mapper)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
