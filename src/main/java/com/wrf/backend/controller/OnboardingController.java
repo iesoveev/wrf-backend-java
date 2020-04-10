@@ -20,7 +20,7 @@ public class OnboardingController {
 
     @ApiOperation(value = "Добавление онбоардинга")
     @PutMapping("/add")
-    public GeneralImageIdModel addOnboarding(@Valid @RequestBody OnboardingModel model) {
+    public GeneralIdModel addOnboarding(@Valid @RequestBody OnboardingModel model) {
         return onboardingService.addOnboarding(model);
     }
 

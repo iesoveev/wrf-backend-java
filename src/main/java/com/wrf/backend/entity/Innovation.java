@@ -32,9 +32,10 @@ public class Innovation extends BaseEntity {
     @Description("Идентификатор пользователя")
     private Long userId;
 
-    public Innovation(String text, Long categoryId, Long userId) {
+    public Innovation(String text, Long categoryId, Long userId, String imageUuid) {
         this.text = text;
         this.categoryId = categoryId;
         this.userId = userId;
+        this.imageUuid = imageUuid;
     }
 }

@@ -20,4 +20,8 @@ public class UserInnovationRequest {
     @NotBlank
     @ApiModelProperty(required = true, value = "Текст инновации")
     private String text;
+
+    @NotBlank
+    @ApiModelProperty(required = true, value = "Картинка (Base64)")
+    private String image;
 }

@@ -3,6 +3,7 @@ package com.wrf.backend.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -15,15 +16,12 @@ import java.nio.file.Paths;
 @Configuration
 public class FirebaseConfig {
 
-    final AppConfig appConfig;
-
-    public FirebaseConfig(AppConfig appConfig) {
-        this.appConfig = appConfig;
-    }
+    @Value("${firebase.account.file}")
+    private String firebaseAccountFile;
 
     @PostConstruct
     void initialize() throws IOException {
-        final Path p = Paths.get(appConfig.getFirebaseAccountFile());
+        final Path p = Paths.get(firebaseAccountFile);
         try (InputStream serviceAccount = Files.newInputStream(p)) {
             final FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))

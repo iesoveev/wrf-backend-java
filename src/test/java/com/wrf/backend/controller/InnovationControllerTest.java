@@ -18,19 +18,19 @@ public class InnovationControllerTest extends BaseTest {
 
     @MockBean
     InnovationService innovationService;
-
-    @Test
-    public void addInnovationTest() throws Exception {
-        var model = new UserInnovationRequest(1L, "123456");
-
-        post(innovationsPath, model, isOk);
-    }
-
-    @Test
-    public void failAddInnovationTest() throws Exception {
-        var model = new UserInnovationRequest(null, null);
-        post(innovationsPath, model, isBadRequest);
-    }
+//
+//    @Test
+//    public void addInnovationTest() throws Exception {
+//        var model = new UserInnovationRequest(1L, "123456");
+//
+//        post(innovationsPath, model, isOk);
+//    }
+//
+//    @Test
+//    public void failAddInnovationTest() throws Exception {
+//        var model = new UserInnovationRequest(null, null);
+//        post(innovationsPath, model, isBadRequest);
+//    }
 
     @Test
     public void saveImage() throws Exception {

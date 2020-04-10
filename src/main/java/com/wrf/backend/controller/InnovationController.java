@@ -1,10 +1,10 @@
 package com.wrf.backend.controller;
 
 import com.wrf.backend.model.response.CategoryDTO;
+import com.wrf.backend.model.response.GeneralIdDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.model.request.ImageRequestModel;
 import com.wrf.backend.model.request.UserInnovationRequest;
-import com.wrf.backend.model.response.InnovationDTO;
 import com.wrf.backend.service.InnovationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class InnovationController {
 
     @ApiOperation(value = "Добавить инновацию")
     @PostMapping
-    public InnovationDTO addInnovation(@Valid @RequestBody UserInnovationRequest innovationRequest) {
+    public GeneralIdDTO addInnovation(@Valid @RequestBody UserInnovationRequest innovationRequest) {
         return innovationService.addInnovation(innovationRequest);
     }
 
@@ -37,4 +37,12 @@ public class InnovationController {
         innovationService.saveImageByInnovationId(model);
         return new Response();
     }
+
+    @ApiOperation(value = "Получить фото инновации")
+    @PostMapping("/getImage/{image_uuid}")
+    public String getImage(@PathVariable String image_uuid) {
+        return innovationService.getImage(image_uuid);
+    }
+
+
 }
