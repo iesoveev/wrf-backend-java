@@ -15,7 +15,7 @@
 
     <properties>
         <java.version>13</java.version>
-        <swagger.version>3.0.3</swagger.version>
+        <swagger.version>3.0.0</swagger.version>
         <postgresql.version>42.2.2</postgresql.version>
         <fastjson.version>1.2.24</fastjson.version>
         <commons-lang3.version>3.0</commons-lang3.version>
