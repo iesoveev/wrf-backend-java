@@ -6,6 +6,7 @@ import com.wrf.backend.model.response.Response;
 import com.wrf.backend.model.request.ImageRequestModel;
 import com.wrf.backend.model.request.UserInnovationRequest;
 import com.wrf.backend.service.InnovationService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/innovations")
+@Api(tags = "innovations")
 public class InnovationController {
 
     private final InnovationService innovationService;

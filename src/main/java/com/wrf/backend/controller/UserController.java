@@ -2,6 +2,7 @@ package com.wrf.backend.controller;
 
 import com.wrf.backend.model.response.UserDTO;
 import com.wrf.backend.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/employees")
+@Api(tags = "employees")
 public class UserController {
 
     private final UserService userService;

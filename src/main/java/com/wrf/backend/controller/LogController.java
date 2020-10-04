@@ -5,6 +5,7 @@ import com.wrf.backend.model.request.GeneralPeriodModel;
 import com.wrf.backend.model.response.AndroidLogDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.LogService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(tags = "log")
 public class LogController {
 
     final LogService logService;

@@ -5,6 +5,7 @@ import com.wrf.backend.model.response.EventDTO;
 import com.wrf.backend.model.response.GeneralIdDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.WorkShiftService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/ws")
+@Api(tags = "ws")
 public class WorkShiftController {
 
     private final WorkShiftService workShiftService;

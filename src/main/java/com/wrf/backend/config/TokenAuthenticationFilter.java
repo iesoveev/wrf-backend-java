@@ -38,6 +38,9 @@ public final class TokenAuthenticationFilter implements Filter {
         final var wrappedRequest = new ContentCachingRequestWrapper((HttpServletRequest) req);
         final var request = (HttpServletRequest) req;
         final var path = request.getServletPath();
+
+        if (path.equals("/error")) return;
+
         long count = FREE_SERVLET_PATHS.stream()
                 .filter(freePath -> StringUtils.startsWith(path, freePath))
                 .count();

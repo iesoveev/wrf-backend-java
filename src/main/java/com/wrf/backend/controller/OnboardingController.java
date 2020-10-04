@@ -4,6 +4,7 @@ import com.wrf.backend.model.request.*;
 import com.wrf.backend.model.response.OnboardingDTO;
 import com.wrf.backend.model.response.Response;
 import com.wrf.backend.service.OnboardingService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/onboarding")
 @RequiredArgsConstructor
+@Api(tags = "onboarding")
 public class OnboardingController {
 
     final OnboardingService onboardingService;
